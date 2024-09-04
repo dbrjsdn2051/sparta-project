@@ -26,7 +26,7 @@ public enum CalculatorDoubleFactory {
             if(value.operator.equals(operator)) return value.abstractOperation;
         }
 
-        throw new Exception("연산자 타입이 아닙니다.");
+        return null;
     }
 
 }
