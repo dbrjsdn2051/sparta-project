@@ -12,21 +12,32 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ArithmeticCalculator {
 
     private final List<Number> result = new ArrayList<>();
+    private final ExceptionHandler exceptionHandler;
+    private final TypeValidation typeValidation;
+
+    public ArithmeticCalculator() {
+        this.exceptionHandler = new ExceptionHandler();
+        this.typeValidation = new TypeValidation();
+    }
 
     public Number calculation(String firstNumber, String secondNumber, String operator) throws Exception {
+        exceptionHandler.validation(firstNumber, secondNumber, operator); // 에러 체크
+        boolean isDoubleType = typeValidation.type(firstNumber); // 타입 체크
 
-        new ExceptionHandler(firstNumber, secondNumber, operator).validation();
-        boolean isDoubleType = new TypeValidation().type(firstNumber);
+        if (isDoubleType) return getaDouble(firstNumber, secondNumber, operator); // 구현체 주입
+        return getInteger(firstNumber, secondNumber, operator); // 구현체 주입
+    }
 
-        if (isDoubleType) {
-            AbstractOperation<Double> doubleAbstractOperation = CalculatorDoubleFactory.operation(operator);
-            Double answer = doubleAbstractOperation.operator(Double.parseDouble(firstNumber), Double.parseDouble(secondNumber));
-            result.add(answer);
-            return answer;
-        }
-
+    private Integer getInteger(String firstNumber, String secondNumber, String operator) throws Exception {
         AbstractOperation<Integer> integerOperation = CalculatorIntegerFactory.operation(operator);
         Integer answer = integerOperation.operator(Integer.parseInt(firstNumber), Integer.parseInt(secondNumber));
+        result.add(answer);
+        return answer;
+    }
+
+    private Double getaDouble(String firstNumber, String secondNumber, String operator) throws Exception {
+        AbstractOperation<Double> doubleAbstractOperation = CalculatorDoubleFactory.operation(operator);
+        Double answer = doubleAbstractOperation.operator(Double.parseDouble(firstNumber), Double.parseDouble(secondNumber));
         result.add(answer);
         return answer;
     }
