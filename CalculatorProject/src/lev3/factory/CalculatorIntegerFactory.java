@@ -26,7 +26,7 @@ public enum CalculatorIntegerFactory {
         for (CalculatorIntegerFactory value : values()) {
             if(value.operator.equals(operator)) return value.abstractOperation;
         }
-        return null; 
+        return null;
     }
 
 

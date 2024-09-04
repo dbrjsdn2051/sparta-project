@@ -1,13 +1,12 @@
 package lev3;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class MainApp {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Calculator calculator = new Calculator();
+        ArithmeticCalculator arithmeticCalculator = new ArithmeticCalculator();
         while (true) {
             System.out.print("첫번째 수를 입력해주세요 : ");
             String firstNum = sc.next();
@@ -19,7 +18,7 @@ public class MainApp {
             String operator = sc.next();
             System.out.println();
             try {
-                Number answer = calculator.calculation(firstNum, secondNum, operator);
+                Number answer = arithmeticCalculator.calculation(firstNum, secondNum, operator);
                 System.out.println("결과 : " + answer);
                 System.out.println();
             } catch (Exception e){
@@ -28,7 +27,7 @@ public class MainApp {
             }
 
             System.out.println("지금까지 연산 결과");
-            calculator.getResult();
+            arithmeticCalculator.getResult();
 
             System.out.print("더 계산하시겠습니까? (exit 입력 시 종료) : ");
             String exit = sc.next();

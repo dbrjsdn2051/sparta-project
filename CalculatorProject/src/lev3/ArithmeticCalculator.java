@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Calculator {
+public class ArithmeticCalculator {
 
     private final List<Number> result = new ArrayList<>();
 
