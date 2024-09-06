@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 public class ExceptionHandler {
 
+    private final String REGEX = "[0-9]+";
     private static final String OPERATION_REG = "[+\\-*/]";
 
     public void validation(String firstNum, String secondNum, String operator) throws Exception {
@@ -16,6 +17,8 @@ public class ExceptionHandler {
             throw new Exception("0으로 나눌 수 없습니다.");
         if (operator.equals("/") && !secondType && Integer.parseInt(secondNum) == 0)
             throw new Exception("0으로 나눌 수 없습니다.");
+        if (!Pattern.matches(REGEX, firstNum) || !Pattern.matches(REGEX, secondNum))
+            throw new Exception("제대로된 숫자를 입력해주세요.");
     }
 
 }

@@ -36,13 +36,14 @@ public enum CalculatorFactory {
         return null;
     }
 
-/** 
+
+    /**
     public static AbstractOperation<Integer> operation(String operator) throws Exception {
         for (CalculatorIntegerFactory value : values()) {
             if(value.operator.equals(operator)) return value.abstractOperation;
         }
         return null;
     }
-*/
+    */
 
 }
