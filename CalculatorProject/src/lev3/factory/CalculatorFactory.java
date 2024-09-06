@@ -10,38 +10,39 @@ import lev3.integerImpl.DivIntegerOperation;
 import lev3.integerImpl.MulIntegerOperation;
 import lev3.integerImpl.SubIntegerOperation;
 
-public enum CalculatorIntegerFactory {
+public enum CalculatorFactory {
 
-    ADDINTEGER("+", new AddIntegerOperation(), new AddDoubleOperation()),
-    SUBINTEGER("-", new SubIntegerOperation(), new SubDoubleOperation()),
-    MULINTEGER("*", new MulIntegerOperation(), new MulDoubleOperation()),
-    DIVINTEGER("/", new DivIntegerOperation(), new DivDoubleOperation());
+    ADD("+", new AddIntegerOperation(), new AddDoubleOperation()),
+    SUB("-", new SubIntegerOperation(), new SubDoubleOperation()),
+    MUL("*", new MulIntegerOperation(), new MulDoubleOperation()),
+    DIV("/", new DivIntegerOperation(), new DivDoubleOperation());
 
 
     private final String operator;
     private final AbstractOperation<Integer> integerAbstractOperation;
     private final AbstractOperation<Double> doubleAbstractOperation;
 
-    CalculatorIntegerFactory(String operator, AbstractOperation<Integer> integerAbstractOperation, AbstractOperation<Double> doubleAbstractOperation) {
+    CalculatorFactory(String operator, AbstractOperation<Integer> integerAbstractOperation, AbstractOperation<Double> doubleAbstractOperation) {
         this.operator = operator;
         this.integerAbstractOperation = integerAbstractOperation;
         this.doubleAbstractOperation = doubleAbstractOperation;
     }
 
     public static AbstractOperation<?> operationType(String operator, Class<?> type) {
-        for (CalculatorIntegerFactory value : values()) {
-            if(value.operator.equals(operator) && value.)
+        for (CalculatorFactory value : values()) {
+            if (value.operator.equals(operator) && type == Integer.class) return value.integerAbstractOperation;
+            if (value.operator.equals(operator) && type == Double.class) return value.doubleAbstractOperation;
         }
-
+        return null;
     }
 
-
-//    public static AbstractOperation<Integer> operation(String operator) throws Exception {
-//        for (CalculatorIntegerFactory value : values()) {
-//            if(value.operator.equals(operator)) return value.abstractOperation;
-//        }
-//        return null;
-//    }
-
+/** 
+    public static AbstractOperation<Integer> operation(String operator) throws Exception {
+        for (CalculatorIntegerFactory value : values()) {
+            if(value.operator.equals(operator)) return value.abstractOperation;
+        }
+        return null;
+    }
+*/
 
 }
