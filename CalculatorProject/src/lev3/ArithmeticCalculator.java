@@ -34,8 +34,9 @@ public class ArithmeticCalculator {
     }
 
     private <T extends Number> Number performOperationRetAnswer(String firstNumber, String secondNumber, String operator, Class<T> clazz) throws Exception {
-        AbstractOperation<T> operation = (AbstractOperation<T>) CalculatorFactory.operationType(operator, clazz);
-        return operation.operator(castType(firstNumber, clazz), castType(secondNumber, clazz));
+        AbstractOperation<T> operation = CalculatorFactory.operationType(operator, clazz);
+        if(operation != null) return operation.operator(castType(firstNumber, clazz), castType(secondNumber, clazz)); // IDE NPE 경고 처리
+        throw new Exception("Null 값이 입력되었습니다.");
     }
 
     private <T extends Number> T castType(String number, Class<T> clazz) throws Exception {

@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 public class ExceptionHandler {
 
-    private final String REGEX = "[0-9]+";
+    private final String REGEX = "[+-]?[0-9]+(\\.[0-9]+)?";
     private static final String OPERATION_REG = "[+\\-*/]";
 
     public void validation(String firstNum, String secondNum, String operator) throws Exception {

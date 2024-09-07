@@ -10,6 +10,8 @@ import lev3.integerImpl.DivIntegerOperation;
 import lev3.integerImpl.MulIntegerOperation;
 import lev3.integerImpl.SubIntegerOperation;
 
+import java.util.Optional;
+
 public enum CalculatorFactory {
 
     ADD("+", new AddIntegerOperation(), new AddDoubleOperation()),
@@ -28,10 +30,10 @@ public enum CalculatorFactory {
         this.doubleAbstractOperation = doubleAbstractOperation;
     }
 
-    public static AbstractOperation<?> operationType(String operator, Class<?> type) {
+    public static <T extends Number> AbstractOperation<T> operationType(String operator, Class<T> type) {
         for (CalculatorFactory value : values()) {
-            if (value.operator.equals(operator) && type == Integer.class) return value.integerAbstractOperation;
-            if (value.operator.equals(operator) && type == Double.class) return value.doubleAbstractOperation;
+            if (value.operator.equals(operator) && type == Integer.class) return (AbstractOperation<T>) value.integerAbstractOperation;
+            if (value.operator.equals(operator) && type == Double.class) return (AbstractOperation<T>) value.doubleAbstractOperation;
         }
         return null;
     }
