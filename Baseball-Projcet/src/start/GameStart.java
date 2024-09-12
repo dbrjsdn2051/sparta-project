@@ -10,15 +10,15 @@ import java.util.Scanner;
 public class GameStart {
 
     private final int gameLevel;
-    private Scanner sc;
-    private RandomNumber randomNumber;
-    private ExceptionHandler exceptionHandler;
+    private final Scanner sc;
+    private final RandomNumber randomNumber;
+    private final ExceptionHandler exceptionHandler;
 
     public GameStart(int gameLevel) {
         this.gameLevel = gameLevel;
         this.sc = new Scanner(System.in);
         this.randomNumber = new RandomNumber(this.gameLevel);
-        this.exceptionHandler = new InputNumberValidExceptionHandlerImpl(gameLevel);
+        this.exceptionHandler = new InputNumberValidExceptionHandlerImpl(this.gameLevel);
     }
 
     public int start() {
@@ -32,7 +32,7 @@ public class GameStart {
                 System.out.println("에러메시지 : " + e.getMessage());
             }
             int[] result = NumberValid.numberCheck(parserNumber(input), randomNumber.numberList());
-            if (result[0] == 3) {
+            if (result[0] == gameLevel) {
                 System.out.println("정답입니다. ");
                 return cnt;
             } else {
@@ -50,7 +50,4 @@ public class GameStart {
         return list;
     }
 
-    public int getGameLevel() {
-        return gameLevel;
-    }
 }

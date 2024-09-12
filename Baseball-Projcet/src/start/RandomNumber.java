@@ -8,7 +8,7 @@ import java.util.Set;
 public class RandomNumber {
 
     private final int count;
-    private Set<Integer> numbers = new HashSet<>();
+    private final Set<Integer> numbers = new HashSet<>();
 
     public RandomNumber(int count) {
         this.count = count;
@@ -22,10 +22,6 @@ public class RandomNumber {
             numbers.add(num);
         }
 
-        return numbers.stream().toList();
-    }
-
-    public List<Integer> getNumbers() {
         return numbers.stream().toList();
     }
 }

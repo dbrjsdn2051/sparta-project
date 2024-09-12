@@ -10,14 +10,14 @@ import java.util.Scanner;
 public class BaseBallFactory {
 
     private ExceptionHandler exceptionHandler;
-    private Scanner sc;
+    private final Scanner sc;
     private int level;
-    private List<Integer> list;
+    private final List<Integer> list;
 
     public BaseBallFactory() {
         this.sc = new Scanner(System.in);
-        this.level = 3;
         this.list = new ArrayList<>();
+        this.level = 3; // 생성 시점 default
     }
 
     public void action(int gameSet) throws Exception {
