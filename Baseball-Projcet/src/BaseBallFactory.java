@@ -29,7 +29,7 @@ public class BaseBallFactory {
         if (gameSet == 3) System.out.println("게임을 종료합니다.");
     }
 
-    public void setDigitLimit() throws Exception {
+    private void setDigitLimit() throws Exception {
         exceptionHandler = new InputLevelValidExceptionHandlerImpl();
         System.out.println("자릿수를 입력해주세요");
 
@@ -42,13 +42,13 @@ public class BaseBallFactory {
 
     }
 
-    public int startGame() {
+    private int startGame() {
         GameStart gameStart = new GameStart(level);
         return gameStart.start();
     }
 
 
-    public void getList() {
+    private void getList() {
         System.out.println("< 게임 기록 보기 >");
 
         if (list.isEmpty()) {
