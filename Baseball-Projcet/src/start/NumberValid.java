@@ -1,19 +1,37 @@
 package start;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class NumberValid {
 
-    public static int[] numberCheck(List<Integer> numberList, List<Integer> randomNumber) {
-        int[] result = new int[3];
+    private HashMap<String, Integer> map;
+
+    public NumberValid() {
+        map = new HashMap<>();
+    }
+
+    public HashMap<String, Integer> countStrikeBallOut(List<Integer> numberList, List<Integer> randomNumber) {
+        mapToInit();
         for (int i = 0; i < randomNumber.size(); i++) {
             if (randomNumber.contains(numberList.get(i))) {
-                if (randomNumber.get(i).equals(numberList.get(i))) result[0] += 1;
-                else result[1] += 1;
-            } else result[2] += 1;
+                if (randomNumber.get(i).equals(numberList.get(i))) {
+                    map.put("Strike", map.getOrDefault("Strike", 0) + 1);
+                } else {
+                    map.put("Ball", map.getOrDefault("Ball", 0) + 1);
+                }
+            } else {
+                map.put("Out", map.getOrDefault("Out", 0) + 1);
+            }
         }
-        return result;
+        return map;
     }
+
+
+    private void mapToInit() { /** map 초기화 값 세팅 **/
+        map.put("Strike", 0);
+        map.put("Ball", 0);
+        map.put("Out", 0);
+    }
+
 }
