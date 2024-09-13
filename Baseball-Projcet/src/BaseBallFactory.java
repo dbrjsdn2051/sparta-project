@@ -6,6 +6,7 @@ import start.GameStart;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class BaseBallFactory {
 
@@ -43,21 +44,14 @@ public class BaseBallFactory {
     }
 
     private int startGame() {
-        GameStart gameStart = new GameStart(level);
-        return gameStart.start();
+        return new GameStart(level).start();
     }
 
 
     private void getList() {
         System.out.println("< 게임 기록 보기 >");
-
-        if (list.isEmpty()) {
-            System.out.println("아직 게임기록이 없어요!!");
-        }
-
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println((i + 1) + "번째 게임 : 시도 횟수 - " + list.get(i));
-        }
+        if (list.isEmpty()) System.out.println("아직 게임기록이 없어요!!");
+        IntStream.range(0, list.size()).forEach(i -> System.out.println((i + 1) + "번째 게임 : 시도 횟수 - " + i));
         System.out.println();
     }
 }

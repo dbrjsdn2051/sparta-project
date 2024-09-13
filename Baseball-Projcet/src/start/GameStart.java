@@ -3,9 +3,9 @@ package start;
 import exception.ExceptionHandler;
 import exception.InputNumberValidExceptionHandlerImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class GameStart {
 
@@ -30,8 +30,9 @@ public class GameStart {
                 exceptionHandler.valid(input);
             } catch (Exception e) {
                 System.out.println("에러메시지 : " + e.getMessage());
+                continue;
             }
-            int[] result = NumberValid.numberCheck(parserNumber(input), randomNumber.numberList());
+            int[] result = NumberValid.numberCheck(inputNumberList(input), randomNumber.numberList());
             if (result[0] == gameLevel) {
                 System.out.println("정답입니다. ");
                 return cnt;
@@ -42,12 +43,9 @@ public class GameStart {
         }
     }
 
-    public List<Integer> parserNumber(String input) {
-        ArrayList<Integer> list = new ArrayList<>();
-        for (char c : input.toCharArray()) {
-            list.add(Integer.parseInt(String.valueOf(c)));
-        }
-        return list;
+    public List<Integer> inputNumberList(String input) {
+        return input.chars().mapToObj(Character::getNumericValue)
+                .collect(Collectors.toList());
     }
 
 }
