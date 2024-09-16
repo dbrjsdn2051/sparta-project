@@ -6,6 +6,8 @@ import exception.InputNumberValidExceptionHandlerImpl;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static start.BaseballScore.*;
+
 public class GameStart {
 
     private final int gameLevel;
@@ -37,21 +39,24 @@ public class GameStart {
                 continue;
             }
 
-            HashMap<String, Integer> calculateStrikeBallOut = numberValid.countStrikeBallOut(inputNumberList(input), randomNumber.randomNumberList());
+            HashMap<BaseballScore, Integer> calculateStrikeBallOut =
+                    numberValid.countStrikeBallOut(inputNumberList(input), randomNumber.randomNumberList());
 
-            if (calculateStrikeBallOut.get("Strike") == gameLevel) {
+            if (calculateStrikeBallOut.get(STRIKE) == gameLevel) {
                 System.out.println("정답입니다. ");
                 return cnt;
             }
 
-            System.out.println("스트라이크 : " + calculateStrikeBallOut.get("Strike") + " 볼 : " + calculateStrikeBallOut.get("Ball") + " 아웃 : " + calculateStrikeBallOut.get("Out"));
+            System.out.println(
+                    "스트라이크 : " + calculateStrikeBallOut.get(STRIKE)
+                            + " 볼 : " + calculateStrikeBallOut.get(BALL)
+                            + " 아웃 : " + calculateStrikeBallOut.get(OUT));
             cnt += 1;
         }
     }
 
     public List<Integer> inputNumberList(String input) {
-        return input.chars().mapToObj(Character::getNumericValue)
-                .collect(Collectors.toList());
+        return input.chars().mapToObj(Character::getNumericValue).collect(Collectors.toList());
     }
 
 }

@@ -1,6 +1,7 @@
 import exception.ExceptionHandler;
 import exception.InputLevelValidExceptionHandlerImpl;
 import exception.StartNumberValidExceptionHandlerImpl;
+import start.BaseballScore;
 import start.GameStart;
 
 import java.util.ArrayList;
@@ -40,13 +41,11 @@ public class BaseballAction {
         }else if (gameSet == EXIT_GAME) {
             System.out.println("게임을 종료합니다.");
         }
-
     }
 
     private void setLengthLimit() throws Exception {  /** 난이도 조정 **/
         exceptionHandler = new InputLevelValidExceptionHandlerImpl();
         System.out.println("자릿수를 입력해주세요");
-
         String input = sc.nextLine();
         exceptionHandler.valid(input); /** 에러 인터셉터 **/
         level = Integer.parseInt(input);
