@@ -40,7 +40,7 @@ public class GameStart {
             }
 
             HashMap<BaseballScore, Integer> calculateStrikeBallOut =
-                    numberValid.countStrikeBallOut(inputNumberList(input), randomNumber.randomNumberList());
+                    numberValid.countStrikeBallOut(inputNumberList(input), randomNumber.getRandomNumberList());
 
             if (calculateStrikeBallOut.get(STRIKE) == gameLevel) {
                 System.out.println("정답입니다. ");

@@ -17,7 +17,7 @@ public class RandomNumber {
         this.numberSet = new HashSet<>();
     }
 
-    public List<Integer> randomNumberList() {
+    public List<Integer> getRandomNumberList() {
         while (numberSet.size() != count){
             numberSet.add(random.nextInt(9) + 1);
         }
