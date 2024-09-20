@@ -5,8 +5,6 @@ import exception.InputLevelValidExceptionHandlerImpl;
 import exception.StartNumberValidExceptionHandlerImpl;
 import exception.UncheckedRuntimeException;
 
-import java.util.logging.Logger;
-
 public class BaseballActionExceptionTemplateImpl implements BaseballActionExceptionTemplate {
 
     ExceptionHandler exceptionHandler;

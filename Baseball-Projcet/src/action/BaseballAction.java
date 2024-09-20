@@ -1,12 +1,7 @@
 package action;
 
-import action.GameAction;
-import exception.ExceptionHandler;
-import exception.InputLevelValidExceptionHandlerImpl;
-import exception.StartNumberValidExceptionHandlerImpl;
 import exception.template.BaseballActionExceptionTemplate;
 import exception.template.BaseballActionExceptionTemplateImpl;
-import start.BaseballScore;
 import start.GameStart;
 
 import java.util.ArrayList;
@@ -16,6 +11,8 @@ import java.util.stream.IntStream;
 
 public class BaseballAction {
 
+    private static final int DEFAULT_GAME_LEVEL = 3;
+
     private final BaseballActionExceptionTemplate exceptionHandler;
     private final Scanner sc;
     private int level;
@@ -24,7 +21,7 @@ public class BaseballAction {
     public BaseballAction() {
         this.sc = new Scanner(System.in);
         this.list = new ArrayList<>();
-        this.level = 3; // 생성 시점 default
+        this.level = DEFAULT_GAME_LEVEL; // 생성 시점 default
         this.exceptionHandler = new BaseballActionExceptionTemplateImpl();
     }
 
@@ -53,8 +50,7 @@ public class BaseballAction {
         exceptionHandler.levelException(input); /** 에러 인터셉터 **/
         level = Integer.parseInt(input);
 
-        System.out.println("자릿수 설정이 완료되었습니다.");
-        System.out.println();
+        System.out.println("자릿수 설정이 완료되었습니다.\n");
     }
 
     private int startGame() { /** 게임 시작 **/
