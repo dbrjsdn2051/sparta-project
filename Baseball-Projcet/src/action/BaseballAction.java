@@ -1,6 +1,11 @@
+package action;
+
+import action.GameAction;
 import exception.ExceptionHandler;
 import exception.InputLevelValidExceptionHandlerImpl;
 import exception.StartNumberValidExceptionHandlerImpl;
+import exception.template.BaseballActionExceptionTemplate;
+import exception.template.BaseballActionExceptionTemplateImpl;
 import start.BaseballScore;
 import start.GameStart;
 
@@ -11,13 +16,7 @@ import java.util.stream.IntStream;
 
 public class BaseballAction {
 
-    private static final int SET_LENGTH_LIMIT = 0;
-    private static final int START_GAME = 1;
-    private static final int GET_LIST = 2;
-    private static final int EXIT_GAME = 3;
-
-
-    private ExceptionHandler exceptionHandler;
+    private final BaseballActionExceptionTemplate exceptionHandler;
     private final Scanner sc;
     private int level;
     private final List<Integer> list;
@@ -26,28 +25,32 @@ public class BaseballAction {
         this.sc = new Scanner(System.in);
         this.list = new ArrayList<>();
         this.level = 3; // 생성 시점 default
+        this.exceptionHandler = new BaseballActionExceptionTemplateImpl();
     }
 
-    public void action(int gameSet) throws Exception { /** 게임 디스플레이 동작 **/
-        exceptionHandler = new StartNumberValidExceptionHandlerImpl();
-        exceptionHandler.valid(String.valueOf(gameSet)); /** 에러 인터셉터 **/
+    public void action(int gameSet) { /** 게임 디스플레이 동작 **/
 
-        if (gameSet == SET_LENGTH_LIMIT) {
+        exceptionHandler.actionException(String.valueOf(gameSet)); /** 에러 인터셉터 **/
+
+        GameAction gameAction = GameAction.valueOf(gameSet);
+
+        if (gameAction == GameAction.LEVEL) {
             setLengthLimit();
-        }else if (gameSet == START_GAME) {
+        } else if (gameAction == GameAction.START) {
             list.add(startGame());
-        }else if (gameSet == GET_LIST) {
+        } else if (gameAction == GameAction.LIST) {
             getList();
-        }else if (gameSet == EXIT_GAME) {
+        } else if (gameAction == GameAction.EXIT) {
             System.out.println("게임을 종료합니다.");
         }
     }
 
-    private void setLengthLimit() throws Exception {  /** 난이도 조정 **/
-        exceptionHandler = new InputLevelValidExceptionHandlerImpl();
+    private void setLengthLimit() {  /** 난이도 조정 **/
+
         System.out.println("자릿수를 입력해주세요");
+
         String input = sc.nextLine();
-        exceptionHandler.valid(input); /** 에러 인터셉터 **/
+        exceptionHandler.levelException(input); /** 에러 인터셉터 **/
         level = Integer.parseInt(input);
 
         System.out.println("자릿수 설정이 완료되었습니다.");

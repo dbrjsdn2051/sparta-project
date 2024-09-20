@@ -1,3 +1,5 @@
+import action.BaseballAction;
+
 import java.util.Scanner;
 
 public class BaseballApp {
@@ -11,11 +13,7 @@ public class BaseballApp {
         while (!input.equals("3")) {
             System.out.println("0. 자리수 설정 1. 게임 시작하기  2. 게임 기록 보기  3. 종료하기");
             input = sc.nextLine();
-            try {
-                baseballAction.action(Integer.parseInt(input));
-            } catch (Exception e) {
-                System.out.println("에러 메시지 : " + e.getMessage());
-            }
+            baseballAction.action(Integer.parseInt(input));
         }
     }
 
