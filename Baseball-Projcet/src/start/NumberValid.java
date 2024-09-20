@@ -15,15 +15,15 @@ public class NumberValid {
 
     public HashMap<BaseballScore, Integer> countStrikeBallOut(List<Integer> numberList, List<Integer> randomNumber) {
         mapToInit();
-        for (int i = 0; i < randomNumber.size(); i++) {
+        for (int i = 0; i < numberList.size(); i++) {
             if (randomNumber.contains(numberList.get(i))) {
                 if (randomNumber.get(i).equals(numberList.get(i))) {
-                    map.put(STRIKE, map.getOrDefault(STRIKE, 0) + 1);
+                    map.put(STRIKE, map.get(STRIKE) + 1);
                 } else {
-                    map.put(BALL, map.getOrDefault(BALL, 0) + 1);
+                    map.put(BALL, map.get(BALL) + 1);
                 }
             } else {
-                map.put(OUT, map.getOrDefault(OUT, 0) + 1);
+                map.put(OUT, map.get(OUT) + 1);
             }
         }
         return map;
