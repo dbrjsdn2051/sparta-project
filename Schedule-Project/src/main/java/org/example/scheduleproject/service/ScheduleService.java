@@ -2,10 +2,7 @@ package org.example.scheduleproject.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.example.scheduleproject.dto.RequestScheduleWithUserDto;
-import org.example.scheduleproject.dto.ResponseScheduleDto;
-import org.example.scheduleproject.dto.UpdateTodoList;
-import org.example.scheduleproject.dto.UserDto;
+import org.example.scheduleproject.dto.*;
 import org.example.scheduleproject.repository.ScheduleRepository;
 import org.example.scheduleproject.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -34,7 +31,7 @@ public class ScheduleService {
     }
 
 
-    public ResponseScheduleDto getTodoList(UUID scheduleId) {
+    public ResponseDetailsScheduleDto getTodoList(UUID scheduleId) {
         return scheduleRepository.findScheduleById(scheduleId);
     }
 
@@ -43,9 +40,9 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void deleteSchedule(UUID scheduleId, String password) throws BadRequestException {
-        UserDto userById = findUserById(scheduleId);
-        if (!password.equals(userById.getPassword())) {
+    public void deleteSchedule(UUID scheduleId, String requestPassword) throws BadRequestException {
+        String password = findUserById(scheduleId);
+        if (!password.equals(requestPassword)) {
             throw new BadRequestException("비밀번호가 일치하지 않습니다.");
         }
         scheduleRepository.deleteScheduleById(scheduleId);
@@ -53,18 +50,17 @@ public class ScheduleService {
     }
 
     public UUID updateSchedule(UUID scheduleId, UpdateTodoList updateTodoList) throws BadRequestException {
-        UserDto userById = findUserById(scheduleId);
+        String password = findUserById(scheduleId);
 
-        if (!updateTodoList.getPassword().equals(userById.getPassword())) {
+        if (!password.equals(updateTodoList.getPassword())) {
             throw new BadRequestException("비밀번호가 일치하지 않습니다.");
         }
 
         return scheduleRepository.update(scheduleId, updateTodoList);
     }
 
-    private UserDto findUserById(UUID scheduleId) {
-        ResponseScheduleDto findSchedule = scheduleRepository.findScheduleById(scheduleId);
-        return userRepository.findUserPasswordById(findSchedule.getUserId());
+    private String findUserById(UUID scheduleId) {
+        return scheduleRepository.findSchedulePasswordByUserId(scheduleId);
     }
 
 }

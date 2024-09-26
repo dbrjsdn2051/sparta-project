@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.example.scheduleproject.dto.RequestScheduleWithUserDto;
+import org.example.scheduleproject.dto.ResponseDetailsScheduleDto;
 import org.example.scheduleproject.dto.ResponseScheduleDto;
 import org.example.scheduleproject.dto.UpdateTodoList;
 import org.example.scheduleproject.service.ScheduleService;
@@ -26,7 +27,7 @@ public class ScheduleController {
     private ScheduleService scheduleService;
 
     @GetMapping("/schedule/{scheduleId}")
-    public ResponseEntity<ResponseScheduleDto> getSchedule(@PathVariable String scheduleId) {
+    public ResponseEntity<ResponseDetailsScheduleDto> getSchedule(@PathVariable String scheduleId) {
         return ResponseEntity.ok(scheduleService.getTodoList(UUID.fromString(scheduleId)));
     }
 
@@ -47,7 +48,6 @@ public class ScheduleController {
 
     @PutMapping("/schedule/{scheduleId}")
     public UUID updateSchedule(@PathVariable String scheduleId, @RequestBody UpdateTodoList updateTodoList) throws BadRequestException {
-        log.info("{}", updateTodoList.getPassword());
         return scheduleService.updateSchedule(UUID.fromString(scheduleId), updateTodoList);
     }
 

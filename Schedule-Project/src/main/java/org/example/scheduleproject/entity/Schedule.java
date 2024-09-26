@@ -16,17 +16,11 @@ public class Schedule {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Schedule(UUID scheduleId, UUID userId, String todoList, LocalDateTime now) {
+    public Schedule(UUID scheduleId, UUID userId, String todoList, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.scheduleId = scheduleId;
         this.userId = userId;
         this.todoList = todoList;
-        this.createdAt = now;
-        this.updatedAt = now;
-
-    }
-
-    public void update(String todoList, LocalDateTime now) {
-        this.todoList = todoList;
-        this.updatedAt = now;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }

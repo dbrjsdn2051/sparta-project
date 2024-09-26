@@ -20,4 +20,13 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public User(UUID userId, UUID scheduleId, String username, String password, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.userId = userId;
+        this.scheduleId = scheduleId;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

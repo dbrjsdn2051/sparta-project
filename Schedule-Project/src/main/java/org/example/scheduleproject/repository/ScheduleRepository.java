@@ -2,12 +2,18 @@ package org.example.scheduleproject.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.scheduleproject.dto.RequestScheduleWithUserDto;
+import org.example.scheduleproject.dto.ResponseDetailsScheduleDto;
 import org.example.scheduleproject.dto.ResponseScheduleDto;
 import org.example.scheduleproject.dto.UpdateTodoList;
+import org.example.scheduleproject.entity.Schedule;
+import org.example.scheduleproject.repository.rowMapper.ScheduleDetailsRowMapper;
 import org.example.scheduleproject.repository.rowMapper.ScheduleRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +29,9 @@ public class ScheduleRepository {
     }
 
     public void add(UUID scheduleId, UUID userId, LocalDateTime now, RequestScheduleWithUserDto requestScheduleWithUserDto) {
+        Schedule schedule = new Schedule(scheduleId, userId, requestScheduleWithUserDto.getTodoList(), now, now);
         String sql = "insert into schedule(schedule_id, user_id, todo_list, created_at, updated_at) values (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, scheduleId.toString(), userId.toString(), requestScheduleWithUserDto.getTodoList(), now, now);
+        jdbcTemplate.update(sql, schedule.getScheduleId().toString(), schedule.getUserId().toString(), schedule.getTodoList(), schedule.getCreatedAt(), schedule.getUpdatedAt());
     }
 
     public UUID update(UUID scheduleId, UpdateTodoList updateData) {
@@ -37,17 +44,28 @@ public class ScheduleRepository {
         String sql = "select s.schedule_id, u.user_id, s.todo_list, u.username, s.created_at, s.updated_at " +
                 "from schedule s join user u on s.user_id = u.user_id order by s.updated_at desc " +
                 "limit ? offset ?";
-        return jdbcTemplate.query(sql,new Object[]{limit, offset}, new ScheduleRowMapper());
+        return jdbcTemplate.query(sql, new Object[]{limit, offset}, new ScheduleRowMapper());
     }
 
-    public ResponseScheduleDto findScheduleById(UUID scheduleId) {
-        String sql = "select s.schedule_id, s.user_id, s.todo_list, u.username, s.created_at, s.updated_at from schedule s join user u on s.user_id = u.user_id where s.schedule_id = ?";
-        return jdbcTemplate.queryForObject(sql, new ScheduleRowMapper(), scheduleId.toString());
+    public ResponseDetailsScheduleDto findScheduleById(UUID scheduleId) {
+        String sql = "select s.schedule_id, s.user_id, s.todo_list, u.username, u.email, s.created_at, s.updated_at from schedule s join user u on s.user_id = u.user_id where s.schedule_id = ?";
+        return jdbcTemplate.queryForObject(sql, new ScheduleDetailsRowMapper(), scheduleId.toString());
     }
 
     public void deleteScheduleById(UUID scheduleId) {
         String sql = "delete from schedule where schedule_id = ?";
         jdbcTemplate.update(sql, scheduleId.toString());
+    }
+
+    public String findSchedulePasswordByUserId(UUID scheduleId) {
+        String sql = "SELECT u.password FROM schedule s JOIN user u ON s.schedule_id = u.schedule_id WHERE s.schedule_id = ?";
+
+        return jdbcTemplate.queryForObject(sql, new RowMapper<String>() {
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("password");
+            }
+        }, scheduleId.toString());
     }
 
 
