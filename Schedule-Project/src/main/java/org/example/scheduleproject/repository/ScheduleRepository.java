@@ -38,14 +38,14 @@ public class ScheduleRepository {
         return jdbcTemplate.query(sql, new ScheduleRowMapper());
     }
 
-    public Optional<ResponseScheduleDto> findScheduleById(UUID scheduleId) {
+    public ResponseScheduleDto findScheduleById(UUID scheduleId) {
         String sql = "select s.schedule_id, s.user_id, s.todo_list, u.username, s.created_at, s.updated_at from schedule s join user u on s.user_id = u.user_id where s.schedule_id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new ScheduleRowMapper(), scheduleId.toString()));
+        return jdbcTemplate.queryForObject(sql, new ScheduleRowMapper(), scheduleId.toString());
     }
 
     public void deleteScheduleById(UUID scheduleId) {
         String sql = "delete from schedule where schedule_id = ?";
-        jdbcTemplate.update(sql, String.valueOf(scheduleId));
+        jdbcTemplate.update(sql, scheduleId.toString());
     }
 
 

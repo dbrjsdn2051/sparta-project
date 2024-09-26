@@ -1,15 +1,18 @@
 package org.example.scheduleproject.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.example.scheduleproject.dto.RequestScheduleWithUserDto;
 import org.example.scheduleproject.dto.ResponseScheduleDto;
 import org.example.scheduleproject.dto.UpdateTodoList;
 import org.example.scheduleproject.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,7 +25,7 @@ public class ScheduleController {
     private ScheduleService scheduleService;
 
     @GetMapping("/schedule/{scheduleId}")
-    public ResponseEntity<Optional<ResponseScheduleDto>> getSchedule(@PathVariable String scheduleId) {
+    public ResponseEntity<ResponseScheduleDto> getSchedule(@PathVariable String scheduleId) {
         return ResponseEntity.ok(scheduleService.getTodoList(UUID.fromString(scheduleId)));
     }
 
@@ -37,8 +40,8 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/schedule/{scheduleId}")
-    public void deleteSchedule(@PathVariable String scheduleId){
-        scheduleService.deleteSchedule(UUID.fromString(scheduleId));
+    public void deleteSchedule(@PathVariable String scheduleId, @RequestBody Map<String, String> request){
+        scheduleService.deleteSchedule(UUID.fromString(scheduleId), request.get("password"));
     }
 
     @PutMapping("/schedule/{scheduleId}")
