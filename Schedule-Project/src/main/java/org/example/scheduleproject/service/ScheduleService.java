@@ -1,6 +1,7 @@
 package org.example.scheduleproject.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.example.scheduleproject.dto.RequestScheduleWithUserDto;
 import org.example.scheduleproject.dto.ResponseScheduleDto;
 import org.example.scheduleproject.dto.UpdateTodoList;
@@ -37,29 +38,28 @@ public class ScheduleService {
         return scheduleRepository.findScheduleById(scheduleId);
     }
 
-    public List<ResponseScheduleDto> getAllTodoList() {
-        return scheduleRepository.findAllSchedule();
+    public List<ResponseScheduleDto> getAllTodoList(int limit, int offset) {
+        return scheduleRepository.findAllSchedule(limit, (offset - 1) * limit);
     }
 
     @Transactional
-    public void deleteSchedule(UUID scheduleId, String password) {
+    public void deleteSchedule(UUID scheduleId, String password) throws BadRequestException {
         UserDto userById = findUserById(scheduleId);
-        if (password.equals(userById.getPassword())) {
-            scheduleRepository.deleteScheduleById(scheduleId);
-            userRepository.deleteUser(scheduleId);
-            return;
+        if (!password.equals(userById.getPassword())) {
+            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
         }
-        throw new SecurityException("비밀번호가 일치하지 않습니다.");
+        scheduleRepository.deleteScheduleById(scheduleId);
+        userRepository.deleteUser(scheduleId);
     }
 
-    public UUID updateSchedule(UUID scheduleId, UpdateTodoList updateTodoList) {
+    public UUID updateSchedule(UUID scheduleId, UpdateTodoList updateTodoList) throws BadRequestException {
         UserDto userById = findUserById(scheduleId);
 
-        if (updateTodoList.getPassword().equals(userById.getPassword())) {
-            return scheduleRepository.update(scheduleId, updateTodoList);
+        if (!updateTodoList.getPassword().equals(userById.getPassword())) {
+            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
         }
 
-        throw new SecurityException("비밀번호가 일치하지 않습니다.");
+        return scheduleRepository.update(scheduleId, updateTodoList);
     }
 
     private UserDto findUserById(UUID scheduleId) {

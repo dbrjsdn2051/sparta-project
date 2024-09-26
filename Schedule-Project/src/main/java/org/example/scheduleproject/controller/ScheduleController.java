@@ -2,6 +2,7 @@ package org.example.scheduleproject.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.example.scheduleproject.dto.RequestScheduleWithUserDto;
 import org.example.scheduleproject.dto.ResponseScheduleDto;
 import org.example.scheduleproject.dto.UpdateTodoList;
@@ -30,23 +31,23 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedules")
-    public ResponseEntity<List<ResponseScheduleDto>> getAllPost() {
-        return ResponseEntity.ok(scheduleService.getAllTodoList());
+    public ResponseEntity<List<ResponseScheduleDto>> getAllPost(@RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "1") int offset) {
+        return ResponseEntity.ok(scheduleService.getAllTodoList(limit, offset));
     }
 
     @PostMapping("/schedule")
-    public UUID addSchedule(@RequestBody RequestScheduleWithUserDto requestScheduleWithUserDto){
+    public UUID addSchedule(@RequestBody RequestScheduleWithUserDto requestScheduleWithUserDto) {
         return scheduleService.save(requestScheduleWithUserDto);
     }
 
     @DeleteMapping("/schedule/{scheduleId}")
-    public void deleteSchedule(@PathVariable String scheduleId, @RequestBody Map<String, String> request){
+    public void deleteSchedule(@PathVariable String scheduleId, @RequestBody Map<String, String> request) throws BadRequestException {
         scheduleService.deleteSchedule(UUID.fromString(scheduleId), request.get("password"));
     }
 
     @PutMapping("/schedule/{scheduleId}")
-    public UUID updateSchedule(@PathVariable String scheduleId, @RequestBody UpdateTodoList updateTodoList){
-        log.info("{}", updateTodoList.getTodoList());
+    public UUID updateSchedule(@PathVariable String scheduleId, @RequestBody UpdateTodoList updateTodoList) throws BadRequestException {
+        log.info("{}", updateTodoList.getPassword());
         return scheduleService.updateSchedule(UUID.fromString(scheduleId), updateTodoList);
     }
 

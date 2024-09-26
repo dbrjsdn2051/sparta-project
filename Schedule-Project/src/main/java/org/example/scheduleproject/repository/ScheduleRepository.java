@@ -33,9 +33,11 @@ public class ScheduleRepository {
         return scheduleId;
     }
 
-    public List<ResponseScheduleDto> findAllSchedule() {
-        String sql = "select s.schedule_id, u.user_id, s.todo_list, u.username, s.created_at, s.updated_at from schedule s join user u on s.user_id = u.user_id";
-        return jdbcTemplate.query(sql, new ScheduleRowMapper());
+    public List<ResponseScheduleDto> findAllSchedule(int limit, int offset) {
+        String sql = "select s.schedule_id, u.user_id, s.todo_list, u.username, s.created_at, s.updated_at " +
+                "from schedule s join user u on s.user_id = u.user_id order by s.updated_at desc " +
+                "limit ? offset ?";
+        return jdbcTemplate.query(sql,new Object[]{limit, offset}, new ScheduleRowMapper());
     }
 
     public ResponseScheduleDto findScheduleById(UUID scheduleId) {
