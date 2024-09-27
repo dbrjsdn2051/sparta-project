@@ -1,6 +1,5 @@
 package org.example.scheduleproject.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.example.scheduleproject.dto.RequestScheduleWithUserDto;
@@ -9,13 +8,11 @@ import org.example.scheduleproject.dto.ResponseScheduleDto;
 import org.example.scheduleproject.dto.UpdateTodoList;
 import org.example.scheduleproject.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -28,12 +25,12 @@ public class ScheduleController {
 
     @GetMapping("/schedule/{scheduleId}")
     public ResponseEntity<ResponseDetailsScheduleDto> getSchedule(@PathVariable String scheduleId) {
-        return ResponseEntity.ok(scheduleService.getTodoList(UUID.fromString(scheduleId)));
+        return ResponseEntity.ok(scheduleService.findOneSchedule(UUID.fromString(scheduleId)));
     }
 
     @GetMapping("/schedules")
     public ResponseEntity<List<ResponseScheduleDto>> getAllPost(@RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "1") int offset) {
-        return ResponseEntity.ok(scheduleService.getAllTodoList(limit, offset));
+        return ResponseEntity.ok(scheduleService.findAllSchedule(limit, offset));
     }
 
     @PostMapping("/schedule")

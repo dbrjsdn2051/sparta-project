@@ -35,8 +35,20 @@ public class UserRepository {
         return jdbcTemplate.query(sql, new UserResponseRowMapper(), String.valueOf(userId));
     }
 
-    public void deleteUser(UUID scheduleId){
+    public void deleteUser(UUID scheduleId) {
         String sql = "delete from user where schedule_id = ?";
         jdbcTemplate.update(sql, scheduleId.toString());
+    }
+
+    public UserDto findUserByuUerId(UUID userId) {
+        String sql = "select user_id, password from user where user_id = ?";
+        return jdbcTemplate.queryForObject(sql, new RowMapper<UserDto>() {
+            @Override
+            public UserDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                UserDto userDto = new UserDto();
+                userDto.setUserId(UUID.fromString(rs.getString("user_id")));
+                userDto.setPassword(rs.getString("password"));
+                return userDto;
+            }}, userId.toString());
     }
 }

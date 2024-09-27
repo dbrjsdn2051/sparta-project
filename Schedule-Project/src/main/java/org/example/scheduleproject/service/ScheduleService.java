@@ -2,9 +2,11 @@ package org.example.scheduleproject.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.example.scheduleproject.controller.exception.NoRequestException;
 import org.example.scheduleproject.dto.*;
 import org.example.scheduleproject.repository.ScheduleRepository;
 import org.example.scheduleproject.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
 
     @Transactional
@@ -25,42 +28,50 @@ public class ScheduleService {
         UUID scheduleId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
+
+        requestScheduleWithUserDto.setPassword(passwordEncoder.encode(requestScheduleWithUserDto.getPassword()));
+
         userRepository.add(scheduleId, userId, now, requestScheduleWithUserDto);
         scheduleRepository.add(scheduleId, userId, now, requestScheduleWithUserDto);
         return scheduleId;
     }
 
 
-    public ResponseDetailsScheduleDto getTodoList(UUID scheduleId) {
-        return scheduleRepository.findScheduleById(scheduleId);
+    public ResponseDetailsScheduleDto findOneSchedule(UUID scheduleId) {
+        return scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new NoRequestException("데이터가 존재하지 않아요!!"));
     }
 
-    public List<ResponseScheduleDto> getAllTodoList(int limit, int offset) {
+    public List<ResponseScheduleDto> findAllSchedule(int limit, int offset) {
         return scheduleRepository.findAllSchedule(limit, (offset - 1) * limit);
     }
 
     @Transactional
     public void deleteSchedule(UUID scheduleId, String requestPassword) throws BadRequestException {
-        String password = findUserById(scheduleId);
-        if (!password.equals(requestPassword)) {
-            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
-        }
-        scheduleRepository.deleteScheduleById(scheduleId);
+        validPassword(scheduleId, requestPassword);
+        findOneSchedule(scheduleId);
+        scheduleRepository.delete(scheduleId);
         userRepository.deleteUser(scheduleId);
     }
 
+
     public UUID updateSchedule(UUID scheduleId, UpdateTodoList updateTodoList) throws BadRequestException {
-        String password = findUserById(scheduleId);
-
-        if (!password.equals(updateTodoList.getPassword())) {
-            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
-        }
-
+        validPassword(scheduleId, updateTodoList.getPassword());
         return scheduleRepository.update(scheduleId, updateTodoList);
     }
 
-    private String findUserById(UUID scheduleId) {
-        return scheduleRepository.findSchedulePasswordByUserId(scheduleId);
+
+
+    private String findUserPasswordById(UUID scheduleId) {
+        return scheduleRepository.findUserPasswordByScheduleId(scheduleId);
     }
+
+    private void validPassword(UUID scheduleId, String requestPassword) throws BadRequestException {
+        String password = findUserPasswordById(scheduleId);
+        if (passwordEncoder.matches(requestPassword, password)) {
+            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
 
 }

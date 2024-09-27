@@ -13,7 +13,6 @@ import java.util.UUID;
 public class ResponseDetailsScheduleDto {
 
     private UUID scheduleId;
-    private UUID userId;
     private String todoList;
     private String username;
     private String email;

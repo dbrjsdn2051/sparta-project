@@ -14,7 +14,6 @@ public class ScheduleDetailsRowMapper implements RowMapper<ResponseDetailsSchedu
     public ResponseDetailsScheduleDto mapRow(ResultSet rs, int rowNum) throws SQLException {
         ResponseDetailsScheduleDto responseScheduleDto = new ResponseDetailsScheduleDto();
         responseScheduleDto.setScheduleId(UUID.fromString(rs.getString("schedule_id")));
-        responseScheduleDto.setUserId(UUID.fromString(rs.getString("user_id")));
         responseScheduleDto.setUsername(rs.getString("username"));
         responseScheduleDto.setEmail(rs.getString("email"));
         responseScheduleDto.setTodoList(rs.getString("todo_list"));

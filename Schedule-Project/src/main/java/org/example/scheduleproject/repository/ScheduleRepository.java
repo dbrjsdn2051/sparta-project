@@ -1,6 +1,5 @@
 package org.example.scheduleproject.repository;
 
-import lombok.extern.slf4j.Slf4j;
 import org.example.scheduleproject.dto.RequestScheduleWithUserDto;
 import org.example.scheduleproject.dto.ResponseDetailsScheduleDto;
 import org.example.scheduleproject.dto.ResponseScheduleDto;
@@ -47,20 +46,20 @@ public class ScheduleRepository {
         return jdbcTemplate.query(sql, new Object[]{limit, offset}, new ScheduleRowMapper());
     }
 
-    public ResponseDetailsScheduleDto findScheduleById(UUID scheduleId) {
-        String sql = "select s.schedule_id, s.user_id, s.todo_list, u.username, u.email, s.created_at, s.updated_at from schedule s join user u on s.user_id = u.user_id where s.schedule_id = ?";
-        return jdbcTemplate.queryForObject(sql, new ScheduleDetailsRowMapper(), scheduleId.toString());
+    public Optional<ResponseDetailsScheduleDto> findById(UUID scheduleId) {
+        String sql = "select s.schedule_id, s.todo_list, u.username, u.email, s.created_at, s.updated_at from schedule s join user u on s.user_id = u.user_id where s.schedule_id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new ScheduleDetailsRowMapper(), scheduleId.toString()));
     }
 
-    public void deleteScheduleById(UUID scheduleId) {
+    public void delete(UUID scheduleId) {
         String sql = "delete from schedule where schedule_id = ?";
         jdbcTemplate.update(sql, scheduleId.toString());
     }
 
-    public String findSchedulePasswordByUserId(UUID scheduleId) {
+    public String findUserPasswordByScheduleId(UUID scheduleId) {
         String sql = "SELECT u.password FROM schedule s JOIN user u ON s.schedule_id = u.schedule_id WHERE s.schedule_id = ?";
 
-        return jdbcTemplate.queryForObject(sql, new RowMapper<String>() {
+        return "{bcrypt}$" + jdbcTemplate.queryForObject(sql, new RowMapper<String>() {
             @Override
             public String mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return rs.getString("password");
