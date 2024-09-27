@@ -1,6 +1,7 @@
 package org.example.scheduleproject.controller;
 
 import org.apache.coyote.BadRequestException;
+import org.example.scheduleproject.controller.exception.NoRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,4 +15,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> missMatch(BadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    @ExceptionHandler(NoRequestException.class)
+    public ResponseEntity<String> noResult(NoRequestException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
 }
