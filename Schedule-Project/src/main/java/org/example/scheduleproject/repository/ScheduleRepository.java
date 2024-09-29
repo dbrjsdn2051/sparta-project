@@ -30,7 +30,14 @@ public class ScheduleRepository {
     public void add(UUID scheduleId, UUID userId, LocalDateTime now, RequestScheduleWithUserDto requestScheduleWithUserDto) {
         Schedule schedule = new Schedule(scheduleId, userId, requestScheduleWithUserDto.getTodoList(), now, now);
         String sql = "insert into schedule(schedule_id, user_id, todo_list, created_at, updated_at) values (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, schedule.getScheduleId().toString(), schedule.getUserId().toString(), schedule.getTodoList(), schedule.getCreatedAt(), schedule.getUpdatedAt());
+        jdbcTemplate.update(
+                sql,
+                schedule.getScheduleId().toString(),
+                schedule.getUserId().toString(),
+                schedule.getTodoList(),
+                schedule.getCreatedAt(),
+                schedule.getUpdatedAt()
+        );
     }
 
     public UUID update(UUID scheduleId, UpdateTodoList updateData) {
@@ -47,7 +54,10 @@ public class ScheduleRepository {
     }
 
     public Optional<ResponseDetailsScheduleDto> findById(UUID scheduleId) {
-        String sql = "select s.schedule_id, s.todo_list, u.username, u.email, s.created_at, s.updated_at from schedule s join user u on s.user_id = u.user_id where s.schedule_id = ?";
+        String sql = "select s.schedule_id, s.todo_list, u.username, u.email, s.created_at, s.updated_at " +
+                "from schedule s " +
+                "join user u on s.user_id = u.user_id " +
+                "where s.schedule_id = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new ScheduleDetailsRowMapper(), scheduleId.toString()));
     }
 
@@ -57,7 +67,7 @@ public class ScheduleRepository {
     }
 
     public String findUserPasswordByScheduleId(UUID scheduleId) {
-        String sql = "SELECT u.password FROM schedule s JOIN user u ON s.schedule_id = u.schedule_id WHERE s.schedule_id = ?";
+        String sql = "select u.password from user u join schedule s on u.user_id = s.user_id where s.schedule_id = ?";
 
         return "{bcrypt}$" + jdbcTemplate.queryForObject(sql, new RowMapper<String>() {
             @Override

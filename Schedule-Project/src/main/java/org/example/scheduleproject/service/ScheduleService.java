@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,12 +26,17 @@ public class ScheduleService {
 
     @Transactional
     public UUID save(RequestScheduleWithUserDto requestScheduleWithUserDto) {
+        Optional<UserDto> findUser = userRepository.findUserByUsername(requestScheduleWithUserDto.getUsername());
         UUID scheduleId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
-
         requestScheduleWithUserDto.setPassword(passwordEncoder.encode(requestScheduleWithUserDto.getPassword()));
 
+        if (findUser.isPresent()) {
+            scheduleRepository.add(scheduleId, findUser.get().getUserId(), now, requestScheduleWithUserDto);
+            return scheduleId;
+        }
+
+        UUID userId = UUID.randomUUID();
         userRepository.add(scheduleId, userId, now, requestScheduleWithUserDto);
         scheduleRepository.add(scheduleId, userId, now, requestScheduleWithUserDto);
         return scheduleId;
@@ -46,12 +52,9 @@ public class ScheduleService {
         return scheduleRepository.findAllSchedule(limit, (offset - 1) * limit);
     }
 
-    @Transactional
     public void deleteSchedule(UUID scheduleId, String requestPassword) throws BadRequestException {
         validPassword(scheduleId, requestPassword);
-        findOneSchedule(scheduleId);
         scheduleRepository.delete(scheduleId);
-        userRepository.deleteUser(scheduleId);
     }
 
 
@@ -59,7 +62,6 @@ public class ScheduleService {
         validPassword(scheduleId, updateTodoList.getPassword());
         return scheduleRepository.update(scheduleId, updateTodoList);
     }
-
 
 
     private String findUserPasswordById(UUID scheduleId) {

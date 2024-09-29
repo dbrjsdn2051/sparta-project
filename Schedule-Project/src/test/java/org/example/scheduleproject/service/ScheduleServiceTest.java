@@ -9,10 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
@@ -53,12 +55,6 @@ class ScheduleServiceTest {
     }
 
     @Test
-    public void findOne() {
-        ResponseDetailsScheduleDto todoList = scheduleService.findOneSchedule(scheduleId);
-        UserDto findUser = userRepository.findUserByuUerId(userId);
-    }
-
-    @Test
     public void update() {
         UpdateTodoList updateTodoList = new UpdateTodoList();
         updateTodoList.setTodoList("TIL 작성");
@@ -74,20 +70,21 @@ class ScheduleServiceTest {
     }
 
     @Test
-    public void delete() {
-        try {
-            scheduleService.deleteSchedule(scheduleId, "1234");
-        } catch (BadRequestException e) {
-            throw new RuntimeException(e);
-        }
-
+    public void delete() throws BadRequestException {
+        scheduleService.deleteSchedule(scheduleId, "1234");
         assertThatThrownBy(() -> scheduleService.findOneSchedule(scheduleId))
                 .isInstanceOf(RuntimeException.class);
     }
 
     @Test
-    public void findAll(){
+    public void findAll() {
         List<ResponseScheduleDto> list = scheduleService.findAllSchedule(10, 1);
         assertThat(list.size()).isEqualTo(10);
+    }
+
+    @Test
+    public void findUsername() {
+        Optional<UserDto> findUser = userRepository.findUserByUsername("user1");
+        findUser.ifPresent(userDto -> assertThat(userDto.getUserId()).isEqualTo(userId));
     }
 }
