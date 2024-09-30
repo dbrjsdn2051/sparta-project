@@ -26,10 +26,11 @@ public class ScheduleService {
 
     @Transactional
     public UUID save(RequestScheduleWithUserDto requestScheduleWithUserDto) {
-        Optional<UserDto> findUser = userRepository.findUserByUsername(requestScheduleWithUserDto.getUsername());
         UUID scheduleId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
         requestScheduleWithUserDto.setPassword(passwordEncoder.encode(requestScheduleWithUserDto.getPassword()));
+
+        Optional<UserDto> findUser = userRepository.findUserByUsername(requestScheduleWithUserDto.getUsername());
 
         if (findUser.isPresent()) {
             scheduleRepository.add(scheduleId, findUser.get().getUserId(), now, requestScheduleWithUserDto);
@@ -56,7 +57,6 @@ public class ScheduleService {
         validPassword(scheduleId, requestPassword);
         scheduleRepository.delete(scheduleId);
     }
-
 
     public UUID updateSchedule(UUID scheduleId, UpdateTodoList updateTodoList) throws BadRequestException {
         validPassword(scheduleId, updateTodoList.getPassword());
