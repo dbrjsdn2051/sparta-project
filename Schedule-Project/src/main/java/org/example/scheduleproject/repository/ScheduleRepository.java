@@ -43,9 +43,7 @@ public class ScheduleRepository {
     public UUID update(UUID scheduleId, UpdateTodoList updateData) {
         String sql = "update schedule set todo_list = ?, updated_at = ? where schedule_id = ?";
         Object[] params = {updateData.getTodoList(), LocalDateTime.now(), scheduleId.toString()};
-
         jdbcTemplate.update(sql, params);
-
         return scheduleId;
     }
 
