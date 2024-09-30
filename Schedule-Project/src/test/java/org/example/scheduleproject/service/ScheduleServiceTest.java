@@ -38,7 +38,7 @@ class ScheduleServiceTest {
     @BeforeEach
     public void init() {
         RequestScheduleWithUserDto requestScheduleWithUserDto1 = new RequestScheduleWithUserDto();
-        requestScheduleWithUserDto1.setUsername("user1");
+        requestScheduleWithUserDto1.setUsername("user2");
         requestScheduleWithUserDto1.setPassword("1234");
         requestScheduleWithUserDto1.setTodoList("hi");
         requestScheduleWithUserDto1.setEmail("user1@naver.com");
@@ -84,7 +84,7 @@ class ScheduleServiceTest {
 
     @Test
     public void findUsername() {
-        Optional<UserDto> findUser = userRepository.findUserByUsername("user1");
+        Optional<UserDto> findUser = userRepository.findUserByUsername("user2");
         findUser.ifPresent(userDto -> assertThat(userDto.getUserId()).isEqualTo(userId));
     }
 }
