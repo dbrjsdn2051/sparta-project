@@ -5,10 +5,12 @@ import org.example.scheduleproject.dto.RequestScheduleWithUserDto;
 import org.example.scheduleproject.dto.ResponseDetailsScheduleDto;
 import org.example.scheduleproject.dto.ResponseScheduleDto;
 import org.example.scheduleproject.dto.UpdateTodoList;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -25,12 +27,17 @@ class ScheduleRepositoryTest {
     ScheduleRepository scheduleRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     private UUID scheduleId;
     private UUID userId;
 
     @BeforeEach
     public void init() {
+        jdbcTemplate.update("delete from schedule");
+        jdbcTemplate.update("delete from user");
+
         RequestScheduleWithUserDto requestScheduleWithUserDto1 = new RequestScheduleWithUserDto();
         requestScheduleWithUserDto1.setUsername("user1");
         requestScheduleWithUserDto1.setPassword("1234");
@@ -64,7 +71,7 @@ class ScheduleRepositoryTest {
     }
 
     @Test
-    public void updateTest(){
+    public void updateTest() {
         UpdateTodoList updateTodoList = new UpdateTodoList();
         updateTodoList.setPassword("1234");
         updateTodoList.setTodoList("Hello World");
@@ -73,20 +80,20 @@ class ScheduleRepositoryTest {
 
         ResponseDetailsScheduleDto findSchedule = scheduleRepository.findById(scheduleId).orElseThrow();
 
-        assertThat(findSchedule.getTodoList()).isEqualTo("Hello World");
+        assertThat(findSchedule.getTodoList()).isEqualTo(updateTodoList.getTodoList());
     }
 
     @Test
-    public void deleteTest(){
+    public void deleteTest() {
         scheduleRepository.delete(scheduleId);
         assertThatThrownBy(() -> scheduleRepository.findById(scheduleId))
                 .isInstanceOf(RuntimeException.class);
     }
 
     @Test
-    public void findAllTest(){
-        List<ResponseScheduleDto> schedules = scheduleRepository.findAllSchedule(10, 1);
-        assertThat(schedules.size()).isEqualTo(10);
+    public void findAllTest() {
+        List<ResponseScheduleDto> schedules = scheduleRepository.findAllSchedule(5, 0);
+        assertThat(schedules.size()).isEqualTo(2);
     }
 
 

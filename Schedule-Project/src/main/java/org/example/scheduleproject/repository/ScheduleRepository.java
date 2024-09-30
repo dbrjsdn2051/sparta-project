@@ -42,7 +42,10 @@ public class ScheduleRepository {
 
     public UUID update(UUID scheduleId, UpdateTodoList updateData) {
         String sql = "update schedule set todo_list = ?, updated_at = ? where schedule_id = ?";
-        jdbcTemplate.update(sql, updateData.getTodoList(), LocalDateTime.now(), String.valueOf(scheduleId));
+        Object[] params = {updateData.getTodoList(), LocalDateTime.now(), scheduleId.toString()};
+
+        jdbcTemplate.update(sql, params);
+
         return scheduleId;
     }
 
@@ -50,7 +53,7 @@ public class ScheduleRepository {
         String sql = "select s.schedule_id, u.user_id, s.todo_list, u.username, s.created_at, s.updated_at " +
                 "from schedule s join user u on s.user_id = u.user_id order by s.updated_at desc " +
                 "limit ? offset ?";
-        return jdbcTemplate.query(sql, new Object[]{limit, offset}, new ScheduleRowMapper());
+        return jdbcTemplate.query(sql, new ScheduleRowMapper(), new Object[]{limit, offset});
     }
 
     public Optional<ResponseDetailsScheduleDto> findById(UUID scheduleId) {
@@ -69,12 +72,9 @@ public class ScheduleRepository {
     public String findUserPasswordByScheduleId(UUID scheduleId) {
         String sql = "select u.password from user u join schedule s on u.user_id = s.user_id where s.schedule_id = ?";
 
-        return "{bcrypt}$" + jdbcTemplate.queryForObject(sql, new RowMapper<String>() {
-            @Override
-            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return rs.getString("password");
-            }
-        }, scheduleId.toString());
+        return "{bcrypt}$" + jdbcTemplate.queryForObject(sql,
+                ((rs, rowNum) -> rs.getString("password")),
+                scheduleId.toString());
     }
 
 
