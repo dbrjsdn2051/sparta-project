@@ -1,4 +1,4 @@
-package org.example.scheduleproject.controller;
+package org.example.scheduleproject.controller.exception;
 
 import org.apache.coyote.BadRequestException;
 import org.example.scheduleproject.controller.exception.NoRequestException;

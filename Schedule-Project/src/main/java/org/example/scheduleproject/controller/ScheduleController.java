@@ -25,27 +25,28 @@ public class ScheduleController {
 
     @GetMapping("/schedule/{scheduleId}")
     public ResponseEntity<ResponseDetailsScheduleDto> getSchedule(@PathVariable String scheduleId) {
-        return ResponseEntity.ok(scheduleService.findOneSchedule(UUID.fromString(scheduleId)));
+        return ResponseEntity.ok().body(scheduleService.findScheduleByScheduleId(UUID.fromString(scheduleId)));
     }
 
     @GetMapping("/schedules")
-    public ResponseEntity<List<ResponseScheduleDto>> getAllPost(@RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "1") int offset) {
-        return ResponseEntity.ok(scheduleService.findAllSchedule(limit, offset));
+    public ResponseEntity<List<ResponseScheduleDto>> getAllSchedule(@RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "1") int offset) {
+        return ResponseEntity.ok().body(scheduleService.findAllSchedule(limit, offset));
     }
 
     @PostMapping("/schedule")
-    public UUID addSchedule(@RequestBody RequestScheduleWithUserDto requestScheduleWithUserDto) {
-        return scheduleService.save(requestScheduleWithUserDto);
+    public ResponseEntity<UUID> addSchedule(@RequestBody RequestScheduleWithUserDto requestScheduleWithUserDto) {
+        return ResponseEntity.ok().body(scheduleService.save(requestScheduleWithUserDto));
     }
 
     @DeleteMapping("/schedule/{scheduleId}")
-    public void deleteSchedule(@PathVariable String scheduleId, @RequestBody Map<String, String> request) throws BadRequestException {
+    public ResponseEntity<Void> deleteSchedule(@PathVariable String scheduleId, @RequestBody Map<String, String> request) throws BadRequestException {
         scheduleService.deleteSchedule(UUID.fromString(scheduleId), request.get("password"));
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/schedule/{scheduleId}")
-    public UUID updateSchedule(@PathVariable String scheduleId, @RequestBody UpdateTodoList updateTodoList) throws BadRequestException {
-        return scheduleService.updateSchedule(UUID.fromString(scheduleId), updateTodoList);
+    public ResponseEntity<UUID> updateSchedule(@PathVariable String scheduleId, @RequestBody UpdateTodoList updateTodoList) throws BadRequestException {
+        return ResponseEntity.ok().body(scheduleService.updateSchedule(UUID.fromString(scheduleId), updateTodoList));
     }
 
 }

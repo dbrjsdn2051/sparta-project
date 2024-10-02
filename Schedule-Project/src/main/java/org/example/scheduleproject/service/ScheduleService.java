@@ -44,7 +44,7 @@ public class ScheduleService {
     }
 
 
-    public ResponseDetailsScheduleDto findOneSchedule(UUID scheduleId) {
+    public ResponseDetailsScheduleDto findScheduleByScheduleId(UUID scheduleId) {
         return scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new NoRequestException("데이터가 존재하지 않아요!!"));
     }

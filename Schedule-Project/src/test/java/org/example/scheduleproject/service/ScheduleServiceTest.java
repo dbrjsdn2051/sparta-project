@@ -55,7 +55,7 @@ class ScheduleServiceTest {
 
     @Test
     public void saveTest() {
-        ResponseDetailsScheduleDto findSchedule = scheduleService.findOneSchedule(scheduleId);
+        ResponseDetailsScheduleDto findSchedule = scheduleService.findScheduleByScheduleId(scheduleId);
         assertThat(findSchedule.getScheduleId()).isEqualTo(scheduleId);
     }
 

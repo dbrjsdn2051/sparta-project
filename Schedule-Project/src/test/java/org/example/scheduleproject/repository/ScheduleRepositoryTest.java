@@ -33,31 +33,31 @@ class ScheduleRepositoryTest {
     private UUID scheduleId;
     private UUID userId;
 
-    @BeforeEach
-    public void init() {
-        jdbcTemplate.update("delete from schedule");
-        jdbcTemplate.update("delete from user");
+        @BeforeEach
+        public void init() {
+            jdbcTemplate.update("delete from schedule");
+            jdbcTemplate.update("delete from user");
 
-        RequestScheduleWithUserDto requestScheduleWithUserDto1 = new RequestScheduleWithUserDto();
-        requestScheduleWithUserDto1.setUsername("user1");
-        requestScheduleWithUserDto1.setPassword("1234");
-        requestScheduleWithUserDto1.setTodoList("hi");
-        requestScheduleWithUserDto1.setEmail("user1@naver.com");
-        scheduleId = UUID.randomUUID();
-        userId = UUID.randomUUID();
-        userRepository.add(scheduleId, userId, LocalDateTime.now(), requestScheduleWithUserDto1);
-        scheduleRepository.add(scheduleId, userId, LocalDateTime.now(), requestScheduleWithUserDto1);
+            RequestScheduleWithUserDto requestScheduleWithUserDto1 = new RequestScheduleWithUserDto();
+            requestScheduleWithUserDto1.setUsername("user1");
+            requestScheduleWithUserDto1.setPassword("1234");
+            requestScheduleWithUserDto1.setTodoList("hi");
+            requestScheduleWithUserDto1.setEmail("user1@naver.com");
+            scheduleId = UUID.randomUUID();
+            userId = UUID.randomUUID();
+            userRepository.add(scheduleId, userId, LocalDateTime.now(), requestScheduleWithUserDto1);
+            scheduleRepository.add(scheduleId, userId, LocalDateTime.now(), requestScheduleWithUserDto1);
 
-        RequestScheduleWithUserDto requestScheduleWithUserDto2 = new RequestScheduleWithUserDto();
-        requestScheduleWithUserDto2.setUsername("user2");
-        requestScheduleWithUserDto2.setPassword("1234");
-        requestScheduleWithUserDto2.setTodoList("hello");
-        requestScheduleWithUserDto2.setEmail("user2@naver.com");
-        UUID scheduleId2 = UUID.randomUUID();
-        UUID userId2 = UUID.randomUUID();
-        userRepository.add(scheduleId2, userId2, LocalDateTime.now(), requestScheduleWithUserDto2);
-        scheduleRepository.add(scheduleId2, userId2, LocalDateTime.now(), requestScheduleWithUserDto2);
-    }
+            RequestScheduleWithUserDto requestScheduleWithUserDto2 = new RequestScheduleWithUserDto();
+            requestScheduleWithUserDto2.setUsername("user2");
+            requestScheduleWithUserDto2.setPassword("1234");
+            requestScheduleWithUserDto2.setTodoList("hello");
+            requestScheduleWithUserDto2.setEmail("user2@naver.com");
+            UUID scheduleId2 = UUID.randomUUID();
+            UUID userId2 = UUID.randomUUID();
+            userRepository.add(scheduleId2, userId2, LocalDateTime.now(), requestScheduleWithUserDto2);
+            scheduleRepository.add(scheduleId2, userId2, LocalDateTime.now(), requestScheduleWithUserDto2);
+        }
 
 
     @Test
