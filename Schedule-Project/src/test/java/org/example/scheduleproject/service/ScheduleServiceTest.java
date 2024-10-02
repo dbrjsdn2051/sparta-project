@@ -70,14 +70,14 @@ class ScheduleServiceTest {
             throw new RuntimeException(e.getMessage());
         }
 
-        ResponseDetailsScheduleDto findSchedule = scheduleService.findOneSchedule(scheduleId);
+        ResponseDetailsScheduleDto findSchedule = scheduleService.findScheduleByScheduleId(scheduleId);
         assertThat(findSchedule.getTodoList()).isEqualTo(updateTodoList.getTodoList());
     }
 
     @Test
     public void delete() throws BadRequestException {
         scheduleService.deleteSchedule(scheduleId, "1234");
-        assertThatThrownBy(() -> scheduleService.findOneSchedule(scheduleId))
+        assertThatThrownBy(() -> scheduleService.findScheduleByScheduleId(scheduleId))
                 .isInstanceOf(RuntimeException.class);
     }
 
