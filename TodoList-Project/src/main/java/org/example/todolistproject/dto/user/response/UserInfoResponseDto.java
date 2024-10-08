@@ -1,5 +1,6 @@
 package org.example.todolistproject.dto.user.response;
 
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoDto {
+public class UserInfoResponseDto {
     private Long userId;
     private String username;
+    @Email
     private String email;
     private Role role;
     private List<Schedule> schedules;

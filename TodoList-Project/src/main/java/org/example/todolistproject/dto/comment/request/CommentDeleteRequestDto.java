@@ -1,4 +1,4 @@
-package org.example.todolistproject.dto.comment;
+package org.example.todolistproject.dto.comment.request;
 
 
 import lombok.Getter;
@@ -11,4 +11,5 @@ import lombok.Setter;
 public class CommentDeleteRequestDto {
     private Long commentId;
     private String password;
+
 }
