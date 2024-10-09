@@ -1,19 +1,17 @@
 package org.example.todolistproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Schedule extends TimeStamped {
 
     @Id
@@ -25,14 +23,13 @@ public class Schedule extends TimeStamped {
     private String title;
     private String password;
 
-    @Setter
     private String content;
 
-    @Setter
     private String weather;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @JsonManagedReference
@@ -40,7 +37,9 @@ public class Schedule extends TimeStamped {
     private List<Comment> comments = new ArrayList<>();
 
     public void addUser(User user) {
-        user.getSchedules().add(this);
+        if(!user.getSchedules().contains(this)){
+            user.getSchedules().add(this);
+        }
         this.user = user;
     }
 
@@ -49,5 +48,9 @@ public class Schedule extends TimeStamped {
         this.password = password;
         this.content = content;
         this.weather = weather;
+    }
+
+    public void changeContent(String content){
+        this.content = content;
     }
 }

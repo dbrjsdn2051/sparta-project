@@ -1,20 +1,19 @@
 package org.example.todolistproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends TimeStamped{
 
     @Id
@@ -33,6 +32,7 @@ public class User extends TimeStamped{
     private Role role;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private final List<Schedule> schedules = new ArrayList<>();
 
     public User(String username, String email, String password, Role role) {

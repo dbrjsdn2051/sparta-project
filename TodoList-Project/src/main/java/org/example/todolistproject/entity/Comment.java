@@ -2,14 +2,11 @@ package org.example.todolistproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends TimeStamped {
 
     @Id
@@ -19,7 +16,6 @@ public class Comment extends TimeStamped {
     private String username;
     private String password;
 
-    @Setter
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,13 +24,19 @@ public class Comment extends TimeStamped {
     private Schedule schedule;
 
     public void addSchedule(Schedule schedule) {
-        schedule.getComments().add(this);
+        if(!schedule.getComments().contains(this)){
+            schedule.getComments().add(this);
+        }
         this.schedule = schedule;
     }
 
     public Comment(String username, String password, String content) {
         this.username = username;
         this.password = password;
+        this.content = content;
+    }
+
+    public void changeContent(String content) {
         this.content = content;
     }
 }

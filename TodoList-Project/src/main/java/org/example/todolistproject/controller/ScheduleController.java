@@ -22,25 +22,37 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping("/schedule")
-    public ResponseEntity<Long> join(@RequestBody ScheduleCreateRequestDto dto, @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue) {
+    public ResponseEntity<Long> join(
+            @RequestBody ScheduleCreateRequestDto dto,
+            @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
+    {
         Long scheduleId = scheduleService.add(dto, tokenValue);
         return ResponseEntity.ok(scheduleId);
     }
 
     @GetMapping("/schedule/{scheduleId}")
-    public ResponseEntity<ScheduleInfoResponseDto> findSchedule(@PathVariable Long scheduleId) {
-        ScheduleInfoResponseDto dto = scheduleService.findOne(scheduleId);
+    public ResponseEntity<ScheduleInfoResponseDto> findSchedule(
+            @PathVariable Long scheduleId,
+            @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
+    {
+        ScheduleInfoResponseDto dto = scheduleService.findOne(scheduleId, tokenValue );
         return ResponseEntity.ok(dto);
     }
 
     @PatchMapping("/schedule")
-    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleUpdateRequestDto dto, @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue) {
+    public ResponseEntity<Void> updateSchedule(
+            @RequestBody ScheduleUpdateRequestDto dto,
+            @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
+    {
         scheduleService.update(dto, tokenValue);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/schedule")
-    public ResponseEntity<Void> deleteSchedule(@RequestBody ScheduleDeleteRequestDto dto, @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue) {
+    public ResponseEntity<Void> deleteSchedule(
+            @RequestBody ScheduleDeleteRequestDto dto,
+            @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
+    {
         scheduleService.delete(dto, tokenValue);
         return ResponseEntity.noContent().build();
     }

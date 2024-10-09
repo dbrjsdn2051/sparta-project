@@ -24,18 +24,22 @@ public class CommentController {
     }
 
     @PostMapping("/{scheduleId}")
-    public ResponseEntity<Long> join(@PathVariable Long scheduleId, @RequestBody CommentCreateRequestDto dto, @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue) {
+    public ResponseEntity<Long> join(
+            @PathVariable Long scheduleId,
+            @RequestBody CommentCreateRequestDto dto,
+            @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
+    {
         Long commentId = commentService.add(dto, scheduleId, tokenValue);
         return ResponseEntity.ok(commentId);
     }
 
-    @PatchMapping("")
+    @PatchMapping()
     public ResponseEntity<Void> updateComment(@RequestBody CommentUpdateRequestDto dto)  {
         commentService.update(dto);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping()
     public ResponseEntity<Void> deleteComment(@RequestBody CommentDeleteRequestDto dto) {
         commentService.delete(dto);
         return ResponseEntity.noContent().build();

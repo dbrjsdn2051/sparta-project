@@ -22,6 +22,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,10 +37,11 @@ public class ScheduleService {
 
     public Long add(ScheduleCreateRequestDto scheduleDto, String tokenValue) {
         String encodedPassword = passwordEncoder.encode(scheduleDto.getPassword());
+
         scheduleDto.setPassword(encodedPassword);
+        scheduleDto.setWeather(weatherService.findWeatherByDate());
 
         Schedule schedule = modelMapper.map(scheduleDto, Schedule.class);
-        schedule.setWeather(weatherService.findWeatherByDate());
 
         User findUser = getUserByToken(tokenValue);
         schedule.addUser(findUser);
@@ -47,22 +49,26 @@ public class ScheduleService {
         return scheduleRepository.save(schedule).getScheduleId();
     }
 
-    public ScheduleInfoResponseDto findOne(Long scheduleId) {
+    public ScheduleInfoResponseDto findOne(Long scheduleId, String tokenValue) {
         Schedule findSchedule = getScheduleById(scheduleId);
         ScheduleInfoResponseDto map = modelMapper.map(findSchedule, ScheduleInfoResponseDto.class);
-        map.setUsername(findSchedule.getUser().getUsername());
+
+//        map.setUsername(findSchedule.getUser().getUsername());
+        map.setUsername(getUsernameByToken(tokenValue));
+
         return map;
     }
 
+    @Transactional
     public void update(ScheduleUpdateRequestDto dto, String tokenValue){
         Schedule findSchedule = getScheduleById(dto.getScheduleId());
-        validPasswordAndRole(dto.getPassword(), findSchedule.getPassword(), tokenValue);
-        findSchedule.setContent(dto.getContent());
+        validPasswordAndAuthority(dto.getPassword(), findSchedule.getPassword(), tokenValue);
+        findSchedule.changeContent(dto.getContent());
     }
 
     public void delete(ScheduleDeleteRequestDto dto, String tokenValue) {
         Schedule findSchedule = getScheduleById(dto.getScheduleId());
-        validPasswordAndRole(dto.getPassword(), findSchedule.getPassword(), tokenValue);
+        validPasswordAndAuthority(dto.getPassword(), findSchedule.getPassword(), tokenValue);
 
         scheduleRepository.deleteById(dto.getScheduleId());
     }
@@ -77,7 +83,7 @@ public class ScheduleService {
         return scheduleRepository.findById(id).orElseThrow(NoResultDataException::new);
     }
 
-    private void validPasswordAndRole(String password, String encodedPassword, String tokenValue) {
+    private void validPasswordAndAuthority(String password, String encodedPassword, String tokenValue) {
         if (!passwordEncoder.matches(password, encodedPassword)) {
             throw new MissMatchPasswordException();
         }
@@ -102,4 +108,9 @@ public class ScheduleService {
         return userRepository.findByUsername(info.getSubject()).orElseThrow(NoResultDataException::new);
     }
 
+    private String getUsernameByToken(String tokenValue){
+        String token = jwtProvider.substringToken(tokenValue);
+        Claims info = jwtProvider.getUserInfoFromToken(token);
+        return info.getSubject();
+    }
 }

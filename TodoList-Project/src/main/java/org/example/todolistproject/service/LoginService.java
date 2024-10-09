@@ -26,7 +26,7 @@ public class LoginService {
             throw new MissMatchPasswordException();
         }
 
-        String token = jwtProvider.createToken(findUser.getUsername(), Role.USER);
+        String token = jwtProvider.createToken(findUser.getUsername(), findUser.getRole());
         jwtProvider.addJwtToCookie(token, response);
     }
 }

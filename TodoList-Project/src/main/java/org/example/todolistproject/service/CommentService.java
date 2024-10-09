@@ -16,6 +16,7 @@ import org.example.todolistproject.repository.ScheduleRepository;
 import org.example.todolistproject.security.JwtProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,10 +48,11 @@ public class CommentService {
         return modelMapper.map(findComment, CommentInfoResponseDto.class);
     }
 
+    @Transactional
     public void update(CommentUpdateRequestDto dto){
         Comment findComment = get(dto.getCommentId());
         validPassword(dto.getPassword(), findComment.getPassword());
-        findComment.setContent(dto.getContent());
+        findComment.changeContent(dto.getContent());
     }
 
     public void delete(CommentDeleteRequestDto dto){
