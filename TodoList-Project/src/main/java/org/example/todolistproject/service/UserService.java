@@ -24,7 +24,6 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(userDto.getPassword());
         userDto.setPassword(encodedPassword);
 
-
         User user = modelMapper.map(userDto, User.class);
         userRepository.save(user);
         return user.getUserId();

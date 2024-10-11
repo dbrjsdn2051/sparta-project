@@ -29,6 +29,7 @@ public class CommentService {
     private final JwtProvider jwtProvider;
 
 
+    @Transactional
     public Long add(CommentCreateRequestDto dto, Long scheduleId, String tokenValue) {
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         dto.setPassword(encodedPassword);

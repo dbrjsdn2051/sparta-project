@@ -21,7 +21,9 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
 
     public void loadUserByEmail(LoginDto dto, HttpServletResponse response) {
-        User findUser = userRepository.findByEmail(dto.getEmail()).orElseThrow(NoResultDataException::new);
+        User findUser = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(NoResultDataException::new);
+
         if(!passwordEncoder.matches(dto.getPassword(), findUser.getPassword())){
             throw new MissMatchPasswordException();
         }

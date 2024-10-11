@@ -35,6 +35,7 @@ public class ScheduleService {
     private final JwtProvider jwtProvider;
     private final WeatherService weatherService;
 
+    @Transactional
     public Long add(ScheduleCreateRequestDto scheduleDto, String tokenValue) {
         String encodedPassword = passwordEncoder.encode(scheduleDto.getPassword());
 
@@ -51,12 +52,12 @@ public class ScheduleService {
 
     public ScheduleInfoResponseDto findOne(Long scheduleId, String tokenValue) {
         Schedule findSchedule = getScheduleById(scheduleId);
-        ScheduleInfoResponseDto map = modelMapper.map(findSchedule, ScheduleInfoResponseDto.class);
+        ScheduleInfoResponseDto dto = modelMapper.map(findSchedule, ScheduleInfoResponseDto.class);
 
 //        map.setUsername(findSchedule.getUser().getUsername());
-        map.setUsername(getUsernameByToken(tokenValue));
+        dto.setUsername(getUsernameByToken(tokenValue));
 
-        return map;
+        return dto;
     }
 
     @Transactional

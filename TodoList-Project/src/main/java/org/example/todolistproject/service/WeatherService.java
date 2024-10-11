@@ -19,9 +19,9 @@ public class WeatherService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
         String formatDate = simpleDateFormat.format(today);
 
-        List<Weather> weathers = weatherClient.getWeather();
+        List<Weather> weatherList = weatherClient.getWeather();
 
-        return weathers.stream().filter(weather -> weather.getDate().equals(formatDate))
+        return weatherList.stream().filter(weather -> weather.getDate().equals(formatDate))
                 .map(Weather::getWeather).findFirst().orElse(null);
     }
 }
