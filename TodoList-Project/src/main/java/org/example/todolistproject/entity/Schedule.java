@@ -19,7 +19,6 @@ public class Schedule extends TimeStamped {
     @Column(name = "schedule_id")
     private Long scheduleId;
 
-    @Size(max = 10, message = "10글자 이내로 작성해주세요.")
     private String title;
     private String password;
 
@@ -33,21 +32,14 @@ public class Schedule extends TimeStamped {
     private User user;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "schedule", orphanRemoval = true)
+    private final List<Comment> comments = new ArrayList<>();
 
     public void addUser(User user) {
         if(!user.getSchedules().contains(this)){
             user.getSchedules().add(this);
         }
         this.user = user;
-    }
-
-    public Schedule(String title, String password, String content, String weather) {
-        this.title = title;
-        this.password = password;
-        this.content = content;
-        this.weather = weather;
     }
 
     public void changeContent(String content){

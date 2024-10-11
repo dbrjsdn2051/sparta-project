@@ -12,5 +12,5 @@ public class ScheduleCreateRequestDto {
     private String title;
     private String content;
     private String password;
-
+    private String weather;
 }

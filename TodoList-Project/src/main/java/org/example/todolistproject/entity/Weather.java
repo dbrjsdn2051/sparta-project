@@ -9,7 +9,6 @@ import java.time.MonthDay;
 import java.util.Date;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Weather {

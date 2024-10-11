@@ -1,5 +1,6 @@
 package org.example.todolistproject.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.dto.page.PageResponseDto;
 import org.example.todolistproject.dto.schedule.request.ScheduleCreateRequestDto;
@@ -23,7 +24,7 @@ public class ScheduleController {
 
     @PostMapping("/schedule")
     public ResponseEntity<Long> join(
-            @RequestBody ScheduleCreateRequestDto dto,
+            @RequestBody @Valid ScheduleCreateRequestDto dto,
             @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
     {
         Long scheduleId = scheduleService.add(dto, tokenValue);

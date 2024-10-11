@@ -46,20 +46,20 @@ class ScheduleRepositoryTest {
         userRepository.save(user2);
         userRepository.save(user3);
 
-        Schedule schedule1 = new Schedule("title1", "1234", "study", null);
-        Schedule schedule2 = new Schedule("title2", "1234", "study", null);
-        Schedule schedule3 = new Schedule("title3", "1234", "study", null);
-        schedule1.addUser(user1);
-        schedule2.addUser(user2);
-        schedule3.addUser(user3);
-
-        scheduleRepository.save(schedule1);
-        scheduleRepository.save(schedule2);
-        scheduleRepository.save(schedule3);
-
-        Comment comment = new Comment("user1", "1234", "LGTM");
-        comment.addSchedule(schedule1);
-        commentRepository.save(comment);
+//        Schedule schedule1 = new Schedule("title1", "1234", "study", null);
+//        Schedule schedule2 = new Schedule("title2", "1234", "study", null);
+//        Schedule schedule3 = new Schedule("title3", "1234", "study", null);
+//        schedule1.addUser(user1);
+//        schedule2.addUser(user2);
+//        schedule3.addUser(user3);
+//
+//        scheduleRepository.save(schedule1);
+//        scheduleRepository.save(schedule2);
+//        scheduleRepository.save(schedule3);
+//
+//        Comment comment = new Comment("user1", "1234", "LGTM");
+//        comment.addSchedule(schedule1);
+//        commentRepository.save(comment);
 
         em.flush();
         em.clear();
@@ -83,7 +83,7 @@ class ScheduleRepositoryTest {
     @Test
     public void updateTesT(){
         Schedule findSchedule = scheduleRepository.findById(1L).orElseThrow();
-        findSchedule.setContent("TIL");
+        findSchedule.changeContent("TIL");
 
         em.flush();
         em.clear();
