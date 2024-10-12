@@ -5,6 +5,7 @@ import org.example.todolistproject.dto.user.request.UserCreateRequestDto;
 import org.example.todolistproject.dto.user.request.UserDeleteRequestDto;
 import org.example.todolistproject.dto.user.response.UserInfoResponseDto;
 import org.example.todolistproject.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<Long> join(@RequestBody UserCreateRequestDto dto) {
         Long userId = userService.add(dto);
-        return ResponseEntity.ok(userId);
+        return new ResponseEntity<>(userId, HttpStatus.CREATED);
     }
 
     @GetMapping("/{userId}")

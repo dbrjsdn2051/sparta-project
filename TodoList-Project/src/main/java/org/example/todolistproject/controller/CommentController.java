@@ -7,6 +7,7 @@ import org.example.todolistproject.dto.comment.request.CommentDeleteRequestDto;
 import org.example.todolistproject.dto.comment.request.CommentUpdateRequestDto;
 import org.example.todolistproject.security.JwtProvider;
 import org.example.todolistproject.service.CommentService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class CommentController {
             @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
     {
         Long commentId = commentService.add(dto, scheduleId, tokenValue);
-        return ResponseEntity.ok(commentId);
+        return new ResponseEntity<>(commentId, HttpStatus.CREATED);
     }
 
     @PatchMapping()

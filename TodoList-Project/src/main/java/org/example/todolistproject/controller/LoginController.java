@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.dto.login.LoginDto;
 import org.example.todolistproject.service.LoginService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginDto loginDto, HttpServletResponse response)  {
         loginService.loadUserByEmail(loginDto, response);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
