@@ -6,8 +6,16 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.entity.Role;
+import org.example.todolistproject.entity.User;
+import org.example.todolistproject.exception.AuthorizationException;
+import org.example.todolistproject.exception.MissMatchPasswordException;
+import org.example.todolistproject.exception.NoResultDataException;
+import org.example.todolistproject.exception.TokenNotFoundException;
+import org.example.todolistproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -21,11 +29,15 @@ import java.util.Date;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtProvider {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_KEY = "auth";
     public static final String BEARER_PREFIX = "Bearer ";
+
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     private final long TOKEN_TIME = 60 * 60 * 1000L;
 
@@ -111,4 +123,43 @@ public class JwtProvider {
         }
         return null;
     }
+
+    public void validPasswordAndAuthority(String password, String encodedPassword, String tokenValue) {
+        if (!passwordEncoder.matches(password, encodedPassword)) {
+            throw new MissMatchPasswordException();
+        }
+
+        String token = substringToken(tokenValue);
+        if (!validateToken(token)) {
+            throw new TokenNotFoundException();
+        }
+
+        Claims info = getUserInfoFromToken(token);
+        String username = info.getSubject();
+        User findUser = userRepository.findByUsername(username).orElseThrow(NoResultDataException::new);
+
+        if (!findUser.getRole().equals(Role.ADMIN)) {
+            throw new AuthorizationException();
+        }
+    }
+
+    public User getUserByToken(String tokenValue) {
+        String token = substringToken(tokenValue);
+        Claims info = getUserInfoFromToken(token);
+        return userRepository.findByUsername(info.getSubject()).orElseThrow(NoResultDataException::new);
+    }
+
+    public String getUsernameByToken(String tokenValue) {
+        String token = substringToken(tokenValue);
+        Claims info = getUserInfoFromToken(token);
+        return info.getSubject();
+    }
+
+    public Role getRoles(String token) {
+        Claims info = getUserInfoFromToken(token);
+        String role = (String) info.get(AUTHORIZATION_KEY);
+        log.info("role = {}", role);
+        return role.equals("USER") ? Role.USER : Role.ADMIN;
+    }
+
 }

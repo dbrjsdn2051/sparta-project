@@ -2,6 +2,7 @@ package org.example.todolistproject.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.todolistproject.aop.CheckAuthority;
 import org.example.todolistproject.dto.page.PageResponseDto;
 import org.example.todolistproject.dto.schedule.request.ScheduleCreateRequestDto;
 import org.example.todolistproject.dto.schedule.request.ScheduleDeleteRequestDto;
@@ -41,20 +42,17 @@ public class ScheduleController {
     }
 
     @PatchMapping("/schedule")
+    @CheckAuthority
     public ResponseEntity<Void> updateSchedule(
-            @RequestBody ScheduleUpdateRequestDto dto,
-            @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
-    {
-        scheduleService.update(dto, tokenValue);
+            @RequestBody ScheduleUpdateRequestDto dto) {
+        scheduleService.update(dto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/schedule")
-    public ResponseEntity<Void> deleteSchedule(
-            @RequestBody ScheduleDeleteRequestDto dto,
-            @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
-    {
-        scheduleService.delete(dto, tokenValue);
+    @CheckAuthority
+    public ResponseEntity<Void> deleteSchedule(@RequestBody ScheduleDeleteRequestDto dto) {
+        scheduleService.delete(dto);
         return ResponseEntity.noContent().build();
     }
 
