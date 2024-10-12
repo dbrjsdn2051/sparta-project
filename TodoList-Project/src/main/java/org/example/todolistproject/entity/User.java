@@ -34,11 +34,5 @@ public class User extends TimeStamped{
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private final List<Schedule> schedules = new ArrayList<>();
-
-    public User(String username, String email, String password, Role role) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+    
 }

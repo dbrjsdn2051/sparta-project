@@ -2,6 +2,8 @@ package org.example.todolistproject.service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.todolistproject.aop.TableType;
+import org.example.todolistproject.aop.ValidPassword;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.login.LoginDto;
 import org.example.todolistproject.entity.Role;
@@ -24,7 +26,7 @@ public class LoginService {
         User findUser = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(NoResultDataException::new);
 
-        if(!passwordEncoder.matches(dto.getPassword(), findUser.getPassword())){
+        if (!passwordEncoder.matches(dto.getPassword(), findUser.getPassword())) {
             throw new MissMatchPasswordException();
         }
 

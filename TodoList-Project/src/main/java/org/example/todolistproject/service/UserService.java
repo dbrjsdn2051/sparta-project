@@ -32,7 +32,7 @@ public class UserService {
     }
 
     public UserInfoResponseDto findOne(Long userId) {
-        User findUser = get(userId);
+        User findUser = userRepository.findById(userId).orElseThrow(NoResultDataException::new);
         return modelMapper.map(findUser, UserInfoResponseDto.class);
     }
 
@@ -41,9 +41,6 @@ public class UserService {
         userRepository.deleteById(dto.getUserId());
     }
 
-    private User get(Long userId) {
-        return userRepository.findById(userId).orElseThrow(NoResultDataException::new);
-    }
 
 
 

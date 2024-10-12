@@ -46,7 +46,7 @@ public class ScheduleService {
     }
 
     public ScheduleInfoResponseDto findOne(Long scheduleId, String tokenValue) {
-        Schedule findSchedule = getScheduleById(scheduleId);
+        Schedule findSchedule = get(scheduleId);
         ScheduleInfoResponseDto dto = modelMapper.map(findSchedule, ScheduleInfoResponseDto.class);
 
         dto.setUsername(jwtProvider.getUsernameByToken(tokenValue));
@@ -57,7 +57,7 @@ public class ScheduleService {
     @Transactional
     @ValidPassword(value = TableType.SCHEDULE)
     public void update(ScheduleUpdateRequestDto dto) {
-        Schedule findSchedule = getScheduleById(dto.getScheduleId());
+        Schedule findSchedule = get(dto.getScheduleId());
         findSchedule.changeContent(dto.getContent());
     }
 
@@ -70,7 +70,7 @@ public class ScheduleService {
         return scheduleRepository.findAllWithComment(pageable);
     }
 
-    private Schedule getScheduleById(Long id) {
+    private Schedule get(Long id) {
         return scheduleRepository.findById(id).orElseThrow(NoResultDataException::new);
     }
 }
