@@ -17,13 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
     private final CommentService commentService;
-
-    @GetMapping("/{commentId}")
-    public ResponseEntity<CommentInfoResponseDto> findComment(@PathVariable Long commentId) {
-        CommentInfoResponseDto dto = commentService.findOne(commentId);
-        return ResponseEntity.ok(dto);
-    }
-
     @PostMapping("/{scheduleId}")
     public ResponseEntity<Long> join(
             @PathVariable Long scheduleId,
@@ -34,13 +27,20 @@ public class CommentController {
         return new ResponseEntity<>(commentId, HttpStatus.CREATED);
     }
 
-    @PatchMapping()
+    @GetMapping("/{commentId}")
+    public ResponseEntity<CommentInfoResponseDto> findComment(@PathVariable Long commentId) {
+        CommentInfoResponseDto dto = commentService.findOne(commentId);
+        return ResponseEntity.ok(dto);
+    }
+
+
+    @PatchMapping
     public ResponseEntity<Void> updateComment(@RequestBody CommentUpdateRequestDto dto)  {
         commentService.update(dto);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<Void> deleteComment(@RequestBody CommentDeleteRequestDto dto) {
         commentService.delete(dto);
         return ResponseEntity.noContent().build();
