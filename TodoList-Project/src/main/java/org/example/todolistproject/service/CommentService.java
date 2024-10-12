@@ -1,6 +1,8 @@
 package org.example.todolistproject.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.todolistproject.aop.TableType;
+import org.example.todolistproject.aop.ValidPassword;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.comment.reponse.CommentInfoResponseDto;
 import org.example.todolistproject.dto.comment.request.CommentCreateRequestDto;
@@ -48,15 +50,14 @@ public class CommentService {
     }
 
     @Transactional
+    @ValidPassword(value = TableType.COMMENT)
     public void update(CommentUpdateRequestDto dto){
         Comment findComment = get(dto.getCommentId());
-        passwordEncoder.validPassword(dto.getPassword(), findComment.getPassword());
         findComment.changeContent(dto.getContent());
     }
 
+    @ValidPassword(value = TableType.COMMENT)
     public void delete(CommentDeleteRequestDto dto){
-        Comment findComment = get(dto.getCommentId());
-        passwordEncoder.validPassword(dto.getPassword(), findComment.getPassword());
         commentRepository.deleteById(dto.getCommentId());
     }
 

@@ -11,6 +11,7 @@ import org.example.todolistproject.dto.RequestDto;
 import org.example.todolistproject.entity.Comment;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
+import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.repository.CommentRepository;
 import org.example.todolistproject.repository.ScheduleRepository;
 import org.example.todolistproject.repository.UserRepository;
@@ -48,15 +49,15 @@ public class ValidPasswordAspect {
 
         if (type == TableType.USER) {
             Long requestId = dto.getRequestId();
-            User findUser = userRepository.findById(requestId).orElseThrow();
+            User findUser = userRepository.findById(requestId).orElseThrow(NoResultDataException::new);
             passwordEncoder.validPassword(dto.getRequestPassword(), findUser.getPassword());
         } else if (type == TableType.SCHEDULE) {
             Long requestId = dto.getRequestId();
-            Schedule findSchedule = scheduleRepository.findById(requestId).orElseThrow();
+            Schedule findSchedule = scheduleRepository.findById(requestId).orElseThrow(NoResultDataException::new);
             passwordEncoder.validPassword(dto.getRequestPassword(), findSchedule.getPassword());
         } else if (type == TableType.COMMENT) {
             Long requestId = dto.getRequestId();
-            Comment findComment = commentRepository.findById(requestId).orElseThrow();
+            Comment findComment = commentRepository.findById(requestId).orElseThrow(NoResultDataException::new);
             passwordEncoder.validPassword(dto.getRequestPassword(), findComment.getPassword());
         }
 

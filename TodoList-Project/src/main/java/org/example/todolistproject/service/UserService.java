@@ -1,6 +1,8 @@
 package org.example.todolistproject.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.todolistproject.aop.TableType;
+import org.example.todolistproject.aop.ValidPassword;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.user.request.UserCreateRequestDto;
 import org.example.todolistproject.dto.user.request.UserDeleteRequestDto;
@@ -34,9 +36,8 @@ public class UserService {
         return modelMapper.map(findUser, UserInfoResponseDto.class);
     }
 
+    @ValidPassword(value = TableType.USER)
     public void delete(UserDeleteRequestDto dto) {
-        User user = get(dto.getUserId());
-        passwordEncoder.validPassword(dto.getPassword(), user.getPassword());
         userRepository.deleteById(dto.getUserId());
     }
 

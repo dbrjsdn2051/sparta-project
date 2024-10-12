@@ -1,6 +1,8 @@
 package org.example.todolistproject.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.todolistproject.aop.TableType;
+import org.example.todolistproject.aop.ValidPassword;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.page.PageResponseDto;
 import org.example.todolistproject.dto.schedule.request.ScheduleCreateRequestDto;
@@ -23,9 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
     private final WeatherService weatherService;
 
     @Transactional
@@ -53,19 +55,18 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void update(ScheduleUpdateRequestDto dto){
+    @ValidPassword(value = TableType.SCHEDULE)
+    public void update(ScheduleUpdateRequestDto dto) {
         Schedule findSchedule = getScheduleById(dto.getScheduleId());
-        passwordEncoder.validPassword(dto.getPassword(), findSchedule.getPassword());
         findSchedule.changeContent(dto.getContent());
     }
 
+    @ValidPassword(value = TableType.SCHEDULE)
     public void delete(ScheduleDeleteRequestDto dto) {
-        Schedule findSchedule = getScheduleById(dto.getScheduleId());
-        passwordEncoder.validPassword(dto.getPassword(), findSchedule.getPassword());
         scheduleRepository.deleteById(dto.getScheduleId());
     }
 
-    public Page<PageResponseDto> findAll(Pageable pageable){
+    public Page<PageResponseDto> findAll(Pageable pageable) {
         return scheduleRepository.findAllWithComment(pageable);
     }
 

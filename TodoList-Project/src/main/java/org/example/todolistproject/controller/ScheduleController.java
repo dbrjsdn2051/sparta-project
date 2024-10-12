@@ -44,8 +44,7 @@ public class ScheduleController {
 
     @PatchMapping("/schedule")
     @CheckAuthority
-    public ResponseEntity<Void> updateSchedule(
-            @RequestBody ScheduleUpdateRequestDto dto) {
+    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleUpdateRequestDto dto) {
         scheduleService.update(dto);
         return ResponseEntity.noContent().build();
     }
