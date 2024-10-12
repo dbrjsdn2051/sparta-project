@@ -16,7 +16,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Long> join(@RequestBody UserCreateRequestDto dto) {
         Long userId = userService.add(dto);
         return new ResponseEntity<>(userId, HttpStatus.CREATED);
@@ -28,7 +28,7 @@ public class UserController {
         return ResponseEntity.ok(dto);
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<Void> deleteUser(@RequestBody UserDeleteRequestDto dto) {
         userService.delete(dto);
         return ResponseEntity.noContent().build();

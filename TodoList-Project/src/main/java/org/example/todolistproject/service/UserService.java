@@ -36,7 +36,7 @@ public class UserService {
 
     public void delete(UserDeleteRequestDto dto) {
         User user = get(dto.getUserId());
-        validPassword(dto.getPassword(), user.getPassword());
+        passwordEncoder.validPassword(dto.getPassword(), user.getPassword());
         userRepository.deleteById(dto.getUserId());
     }
 
@@ -44,10 +44,6 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(NoResultDataException::new);
     }
 
-    private void validPassword(String password, String encodedPassword) {
-        if (!passwordEncoder.matches(password, encodedPassword)) {
-            throw new MissMatchPasswordException();
-        }
-    }
+
 
 }

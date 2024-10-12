@@ -14,7 +14,7 @@ public class WeatherService {
 
     private final WeatherClient weatherClient;
 
-    public String findWeatherByDate() {
+    public String getWeather() {
         Date today = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
         String formatDate = simpleDateFormat.format(today);

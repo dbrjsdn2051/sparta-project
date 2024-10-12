@@ -1,6 +1,5 @@
 package org.example.todolistproject.service;
 
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.comment.reponse.CommentInfoResponseDto;
@@ -9,7 +8,6 @@ import org.example.todolistproject.dto.comment.request.CommentDeleteRequestDto;
 import org.example.todolistproject.dto.comment.request.CommentUpdateRequestDto;
 import org.example.todolistproject.entity.Comment;
 import org.example.todolistproject.entity.Schedule;
-import org.example.todolistproject.exception.MissMatchPasswordException;
 import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.repository.CommentRepository;
 import org.example.todolistproject.repository.ScheduleRepository;
@@ -34,7 +32,7 @@ public class CommentService {
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         dto.setPassword(encodedPassword);
 
-        String username = getUsernameByTokenValue(tokenValue);
+        String username = jwtProvider.getUsernameByToken(tokenValue);
         dto.setUsername(username);
 
         Comment comment = modelMapper.map(dto, Comment.class);
@@ -52,29 +50,18 @@ public class CommentService {
     @Transactional
     public void update(CommentUpdateRequestDto dto){
         Comment findComment = get(dto.getCommentId());
-        validPassword(dto.getPassword(), findComment.getPassword());
+        passwordEncoder.validPassword(dto.getPassword(), findComment.getPassword());
         findComment.changeContent(dto.getContent());
     }
 
     public void delete(CommentDeleteRequestDto dto){
         Comment findComment = get(dto.getCommentId());
-        validPassword(dto.getPassword(), findComment.getPassword());
+        passwordEncoder.validPassword(dto.getPassword(), findComment.getPassword());
         commentRepository.deleteById(dto.getCommentId());
-    }
-
-    private void validPassword(String password, String encodedPassword) {
-        if (!passwordEncoder.matches(password, encodedPassword)) {
-            throw new MissMatchPasswordException();
-        }
     }
 
     private Comment get(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(NoResultDataException::new);
     }
 
-    private String getUsernameByTokenValue(String tokenValue){
-        String token = jwtProvider.substringToken(tokenValue);
-        Claims info = jwtProvider.getUserInfoFromToken(token);
-        return info.getSubject();
-    }
 }
