@@ -1,13 +1,14 @@
 package org.example.todolistproject.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.todolistproject.aop.SecurePasswordService;
 import org.example.todolistproject.aop.TableType;
 import org.example.todolistproject.aop.ValidPassword;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.comment.reponse.CommentInfoResponseDto;
 import org.example.todolistproject.dto.comment.request.CommentCreateRequestDto;
-import org.example.todolistproject.dto.comment.request.CommentDeleteRequestDto;
-import org.example.todolistproject.dto.comment.request.CommentUpdateRequestDto;
+import org.example.todolistproject.dto.comment.request.CommentDeleteAuthenticationRequestDto;
+import org.example.todolistproject.dto.comment.request.CommentUpdateAuthenticationRequestDto;
 import org.example.todolistproject.entity.Comment;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.exception.NoResultDataException;
@@ -25,15 +26,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ScheduleRepository scheduleRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
 
     @Transactional
+    @SecurePasswordService
     public Long add(CommentCreateRequestDto dto, Long scheduleId, String tokenValue) {
-        String encodedPassword = passwordEncoder.encode(dto.getPassword());
-        dto.setPassword(encodedPassword);
-
         String username = jwtProvider.getUsernameByToken(tokenValue);
         dto.setUsername(username);
 
@@ -51,13 +49,13 @@ public class CommentService {
 
     @Transactional
     @ValidPassword(value = TableType.COMMENT)
-    public void update(CommentUpdateRequestDto dto){
+    public void update(CommentUpdateAuthenticationRequestDto dto){
         Comment findComment = get(dto.getCommentId());
         findComment.changeContent(dto.getContent());
     }
 
     @ValidPassword(value = TableType.COMMENT)
-    public void delete(CommentDeleteRequestDto dto){
+    public void delete(CommentDeleteAuthenticationRequestDto dto){
         commentRepository.deleteById(dto.getCommentId());
     }
 

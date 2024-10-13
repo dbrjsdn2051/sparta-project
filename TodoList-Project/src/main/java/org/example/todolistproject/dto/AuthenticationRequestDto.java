@@ -1,6 +1,6 @@
 package org.example.todolistproject.dto;
 
-public interface RequestDto {
+public interface AuthenticationRequestDto {
     Long getRequestId();
     String getRequestPassword();
 

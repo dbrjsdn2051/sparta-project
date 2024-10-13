@@ -1,13 +1,14 @@
 package org.example.todolistproject.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.todolistproject.aop.SecurePasswordService;
 import org.example.todolistproject.aop.TableType;
 import org.example.todolistproject.aop.ValidPassword;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.page.PageResponseDto;
 import org.example.todolistproject.dto.schedule.request.ScheduleCreateRequestDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleDeleteRequestDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleUpdateRequestDto;
+import org.example.todolistproject.dto.schedule.request.ScheduleDeleteAuthenticationRequestDto;
+import org.example.todolistproject.dto.schedule.request.ScheduleUpdateAuthenticationRequestDto;
 import org.example.todolistproject.dto.schedule.response.ScheduleInfoResponseDto;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
@@ -26,15 +27,12 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final JwtProvider jwtProvider;
-    private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final WeatherService weatherService;
 
     @Transactional
+    @SecurePasswordService
     public Long add(ScheduleCreateRequestDto scheduleDto, String tokenValue) {
-        String encodedPassword = passwordEncoder.encode(scheduleDto.getPassword());
-
-        scheduleDto.setPassword(encodedPassword);
         scheduleDto.setWeather(weatherService.getWeather());
 
         Schedule schedule = modelMapper.map(scheduleDto, Schedule.class);
@@ -56,13 +54,13 @@ public class ScheduleService {
 
     @Transactional
     @ValidPassword(value = TableType.SCHEDULE)
-    public void update(ScheduleUpdateRequestDto dto) {
+    public void update(ScheduleUpdateAuthenticationRequestDto dto) {
         Schedule findSchedule = get(dto.getScheduleId());
         findSchedule.changeContent(dto.getContent());
     }
 
     @ValidPassword(value = TableType.SCHEDULE)
-    public void delete(ScheduleDeleteRequestDto dto) {
+    public void delete(ScheduleDeleteAuthenticationRequestDto dto) {
         scheduleRepository.deleteById(dto.getScheduleId());
     }
 

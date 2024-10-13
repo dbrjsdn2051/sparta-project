@@ -7,7 +7,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.example.todolistproject.config.PasswordEncoder;
-import org.example.todolistproject.dto.RequestDto;
+import org.example.todolistproject.dto.AuthenticationRequestDto;
 import org.example.todolistproject.entity.Comment;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
@@ -44,7 +44,7 @@ public class ValidPasswordAspect {
         TableType type = validPassword.value();
 
         Object[] args = joinPoint.getArgs();
-        RequestDto dto = (RequestDto) args[0];
+        AuthenticationRequestDto dto = (AuthenticationRequestDto) args[0];
 
 
         if (type == TableType.USER) {
