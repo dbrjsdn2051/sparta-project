@@ -1,4 +1,4 @@
-# JPA를 활용한 일정관리 앱입니다. 
+# JPA를 활용한 일정관리 앱
 
 ![image](https://github.com/user-attachments/assets/92485586-fb02-4d32-b024-d31cb6f3bec5)
 
