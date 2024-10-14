@@ -17,7 +17,6 @@ import java.util.List;
 public class UserInfoResponseDto {
     private Long userId;
     private String username;
-    @Email
     private String email;
     private Role role;
     private List<Schedule> schedules;

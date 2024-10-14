@@ -3,13 +3,12 @@ package org.example.todolistproject.dto.schedule.request;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.todolistproject.dto.RequestDto;
-import org.example.todolistproject.entity.Role;
+import org.example.todolistproject.dto.AuthenticationRequestDto;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class ScheduleDeleteRequestDto implements RequestDto {
+public class ScheduleDeleteAuthenticationRequestDto implements AuthenticationRequestDto {
     private Long scheduleId;
     private String password;
 

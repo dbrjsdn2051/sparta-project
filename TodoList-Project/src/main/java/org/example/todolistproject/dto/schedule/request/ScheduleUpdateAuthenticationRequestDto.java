@@ -4,14 +4,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.example.todolistproject.dto.RequestDto;
-import org.example.todolistproject.entity.Role;
+import org.example.todolistproject.dto.AuthenticationRequestDto;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class ScheduleUpdateRequestDto implements RequestDto {
+public class ScheduleUpdateAuthenticationRequestDto implements AuthenticationRequestDto {
 
     private Long scheduleId;
     private String content;

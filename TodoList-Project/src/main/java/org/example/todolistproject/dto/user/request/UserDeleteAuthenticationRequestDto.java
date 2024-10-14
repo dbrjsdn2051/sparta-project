@@ -2,11 +2,11 @@ package org.example.todolistproject.dto.user.request;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.todolistproject.dto.RequestDto;
+import org.example.todolistproject.dto.AuthenticationRequestDto;
 
 @Getter
 @Setter
-public class UserDeleteRequestDto implements RequestDto {
+public class UserDeleteAuthenticationRequestDto implements AuthenticationRequestDto {
 
     private Long userId;
     private String password;

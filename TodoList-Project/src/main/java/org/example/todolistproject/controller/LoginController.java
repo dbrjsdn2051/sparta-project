@@ -1,6 +1,7 @@
 package org.example.todolistproject.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.dto.login.LoginDto;
 import org.example.todolistproject.service.LoginService;
@@ -19,7 +20,7 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginDto loginDto, HttpServletResponse response)  {
+    public ResponseEntity<Void> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response)  {
         loginService.loadUserByEmail(loginDto, response);
         return new ResponseEntity<>(HttpStatus.OK);
     }

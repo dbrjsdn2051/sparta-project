@@ -3,8 +3,8 @@ package org.example.todolistproject.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.dto.comment.reponse.CommentInfoResponseDto;
 import org.example.todolistproject.dto.comment.request.CommentCreateRequestDto;
-import org.example.todolistproject.dto.comment.request.CommentDeleteRequestDto;
-import org.example.todolistproject.dto.comment.request.CommentUpdateRequestDto;
+import org.example.todolistproject.dto.comment.request.CommentDeleteAuthenticationRequestDto;
+import org.example.todolistproject.dto.comment.request.CommentUpdateAuthenticationRequestDto;
 import org.example.todolistproject.security.JwtProvider;
 import org.example.todolistproject.service.CommentService;
 import org.springframework.http.HttpStatus;
@@ -35,13 +35,13 @@ public class CommentController {
 
 
     @PatchMapping
-    public ResponseEntity<Void> updateComment(@RequestBody CommentUpdateRequestDto dto)  {
+    public ResponseEntity<Void> updateComment(@RequestBody CommentUpdateAuthenticationRequestDto dto)  {
         commentService.update(dto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteComment(@RequestBody CommentDeleteRequestDto dto) {
+    public ResponseEntity<Void> deleteComment(@RequestBody CommentDeleteAuthenticationRequestDto dto) {
         commentService.delete(dto);
         return ResponseEntity.noContent().build();
     }

@@ -2,6 +2,7 @@ package org.example.todolistproject.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.entity.Weather;
+import org.example.todolistproject.exception.NoResultDataException;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +23,6 @@ public class WeatherService {
         List<Weather> weatherList = weatherClient.getWeather();
 
         return weatherList.stream().filter(weather -> weather.getDate().equals(formatDate))
-                .map(Weather::getWeather).findFirst().orElse(null);
+                .map(Weather::getWeather).findFirst().orElseThrow(NoResultDataException::new);
     }
 }

@@ -11,6 +11,7 @@ import org.example.todolistproject.dto.AuthenticationRequestDto;
 import org.example.todolistproject.entity.Comment;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
+import org.example.todolistproject.exception.MissMatchPasswordException;
 import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.repository.CommentRepository;
 import org.example.todolistproject.repository.ScheduleRepository;
@@ -33,7 +34,7 @@ public class ValidPasswordAspect {
     public void validPasswordAnnotation() {
     }
 
-    ;
+
 
     @Before("validPasswordAnnotation()")
     public void beforeAdvice(JoinPoint joinPoint) {

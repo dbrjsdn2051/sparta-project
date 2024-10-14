@@ -2,7 +2,7 @@ package org.example.todolistproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.dto.user.request.UserCreateRequestDto;
-import org.example.todolistproject.dto.user.request.UserDeleteRequestDto;
+import org.example.todolistproject.dto.user.request.UserDeleteAuthenticationRequestDto;
 import org.example.todolistproject.dto.user.response.UserInfoResponseDto;
 import org.example.todolistproject.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteUser(@RequestBody UserDeleteRequestDto dto) {
+    public ResponseEntity<Void> deleteUser(@RequestBody UserDeleteAuthenticationRequestDto dto) {
         userService.delete(dto);
         return ResponseEntity.noContent().build();
     }
