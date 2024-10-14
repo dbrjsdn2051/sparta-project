@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.aop.CheckAuthority;
 import org.example.todolistproject.dto.page.PageResponseDto;
 import org.example.todolistproject.dto.schedule.request.ScheduleCreateRequestDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleDeleteRequestDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleUpdateRequestDto;
+import org.example.todolistproject.dto.schedule.request.ScheduleDeleteAuthenticationRequestDto;
+import org.example.todolistproject.dto.schedule.request.ScheduleUpdateAuthenticationRequestDto;
 import org.example.todolistproject.dto.schedule.response.ScheduleInfoResponseDto;
 import org.example.todolistproject.security.JwtProvider;
 import org.example.todolistproject.service.ScheduleService;
@@ -44,14 +44,14 @@ public class ScheduleController {
 
     @PatchMapping("/schedule")
     @CheckAuthority
-    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleUpdateRequestDto dto) {
+    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleUpdateAuthenticationRequestDto dto) {
         scheduleService.update(dto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/schedule")
     @CheckAuthority
-    public ResponseEntity<Void> deleteSchedule(@RequestBody ScheduleDeleteRequestDto dto) {
+    public ResponseEntity<Void> deleteSchedule(@RequestBody ScheduleDeleteAuthenticationRequestDto dto) {
         scheduleService.delete(dto);
         return ResponseEntity.noContent().build();
     }
