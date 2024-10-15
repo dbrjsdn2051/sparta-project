@@ -23,7 +23,7 @@ public class LoginController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response)  {
+    public ResponseEntity<Void> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
         User user = loginService.loadUserByEmail(loginDto);
 
         String token = jwtProvider.createToken(user.getUsername(), user.getRole());

@@ -15,11 +15,10 @@ public class CommentFactory {
 
     public Comment createComment(CommentDto.Create commentDto, Schedule schedule) {
         String encodedPassword = passwordEncoder.encode(commentDto.getPassword());
-        commentDto.setPassword(encodedPassword);
 
         return Comment.builder()
                 .username(commentDto.getUsername())
-                .password(commentDto.getPassword())
+                .password(encodedPassword)
                 .content(commentDto.getContent())
                 .schedule(schedule)
                 .build();

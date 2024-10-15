@@ -1,6 +1,7 @@
-package org.example.todolistproject.client;
+package org.example.todolistproject.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.todolistproject.client.WeatherClient;
 import org.example.todolistproject.client.dto.WeatherResponseDto;
 import org.example.todolistproject.exception.NoResultDataException;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,6 @@ public class WeatherClientService {
 
     public String getWeather(LocalDateTime today) {
         String formatDate = today.format(DateTimeFormatter.ofPattern("MM-dd"));
-
         List<WeatherResponseDto> weatherResponseDtoList = weatherClient.getWeather();
 
         return weatherResponseDtoList.stream().filter(weatherResponseDto -> weatherResponseDto.getDate().equals(formatDate))
