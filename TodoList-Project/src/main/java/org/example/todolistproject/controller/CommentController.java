@@ -20,8 +20,7 @@ public class CommentController {
     public ResponseEntity<Long> join(
             @PathVariable Long scheduleId,
             @RequestBody CommentDto.Create dto,
-            @LoginUser User user)
-    {
+            @LoginUser User user) {
         Long commentId = commentService.add(dto, scheduleId, user);
         return new ResponseEntity<>(commentId, HttpStatus.CREATED);
     }

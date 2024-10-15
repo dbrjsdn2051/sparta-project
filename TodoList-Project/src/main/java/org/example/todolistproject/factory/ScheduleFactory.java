@@ -19,14 +19,13 @@ public class ScheduleFactory {
 
     public Schedule createUser(ScheduleDto.Create scheduleDto, User user) {
         String encodedPassword = passwordEncoder.encode(scheduleDto.getPassword());
-        scheduleDto.setPassword(encodedPassword);
-        scheduleDto.setWeather(weatherClientService.getWeather(LocalDateTime.now()));
+        String weather = weatherClientService.getWeather(LocalDateTime.now());
 
         return Schedule.builder()
                 .title(scheduleDto.getTitle())
                 .content(scheduleDto.getContent())
-                .weather(scheduleDto.getWeather())
-                .password(scheduleDto.getPassword())
+                .weather(weather)
+                .password(encodedPassword)
                 .user(user)
                 .build();
     }

@@ -4,12 +4,26 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.todolistproject.dto.comment.CommentDto;
 import org.example.todolistproject.entity.Comment;
 import org.example.todolistproject.entity.Schedule;
 
 import java.util.List;
 
+@NoArgsConstructor
+@Getter
+@Setter
 public class ScheduleDto {
+
+    private Long scheduleId;
+    private String title;
+    private String content;
+
+    public ScheduleDto(Schedule schedule) {
+        this.scheduleId = schedule.getScheduleId();
+        this.title = schedule.getTitle();
+        this.content = schedule.getContent();
+    }
 
     @Getter
     @Setter
@@ -26,7 +40,7 @@ public class ScheduleDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class Update{
+    public static class Update {
         private Long scheduleId;
         private String content;
         private String password;
@@ -49,7 +63,7 @@ public class ScheduleDto {
         private String content;
         private String weather;
         private String username;
-        private List<Comment> comments;
+        private List<CommentDto.Response> comments;
 
 
         public Response(Schedule schedule) {
@@ -58,7 +72,7 @@ public class ScheduleDto {
             this.content = schedule.getContent();
             this.weather = schedule.getWeather();
             this.username = schedule.getUser().getUsername();
-            this.comments = schedule.getComments();
+            this.comments = schedule.getComments().stream().map(CommentDto.Response::new).toList();
         }
     }
 }

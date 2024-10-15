@@ -4,11 +4,13 @@ import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.todolistproject.dto.schedule.ScheduleDto;
 import org.example.todolistproject.entity.Role;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserDto {
 
@@ -60,14 +62,14 @@ public class UserDto {
         private String username;
         private String email;
         private Role role;
-        private List<Schedule> schedules;
+        private List<ScheduleDto> schedules;
 
         public Response(User user) {
             this.userId = user.getUserId();
             this.username = user.getUsername();
             this.email = user.getEmail();
             this.role = user.getRole();
-            this.schedules = user.getSchedules();
+            this.schedules = user.getSchedules().stream().map(ScheduleDto::new).collect(Collectors.toList());
         }
     }
 

@@ -15,12 +15,11 @@ public class UserFactory {
 
     public User createUser(UserDto.Create dto) {
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
-        dto.setPassword(encodedPassword);
 
         return User.builder()
                 .username(dto.getUsername())
                 .email(dto.getEmail())
-                .password(dto.getPassword())
+                .password(encodedPassword)
                 .role(Role.USER)
                 .build();
     }
