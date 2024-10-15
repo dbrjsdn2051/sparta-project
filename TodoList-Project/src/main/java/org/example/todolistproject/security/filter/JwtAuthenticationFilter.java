@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.exception.TokenExpiredException;
 import org.example.todolistproject.exception.TokenNotFoundException;
@@ -25,11 +26,14 @@ public class JwtAuthenticationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String requestURI = request.getRequestURI();
-        if (StringUtils.hasText(requestURI)) {
-            if (requestURI.startsWith("/api/login") || requestURI.startsWith("/api/user")) {
-                filterChain.doFilter(servletRequest, servletResponse);
-                return;
-            }
+
+        if (!StringUtils.hasText(requestURI)) {
+            throw new BadRequestException();
+        }
+
+        if (requestURI.startsWith("/api/login") || requestURI.startsWith("/api/user")) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
         }
 
         String tokenFromRequest = jwtProvider.getTokenFromRequest(request);
