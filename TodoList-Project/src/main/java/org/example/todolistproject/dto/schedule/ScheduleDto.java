@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.todolistproject.dto.comment.CommentDto;
-import org.example.todolistproject.entity.Comment;
 import org.example.todolistproject.entity.Schedule;
 
 import java.util.List;

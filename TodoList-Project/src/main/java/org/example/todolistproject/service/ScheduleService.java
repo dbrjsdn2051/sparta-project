@@ -29,7 +29,6 @@ public class ScheduleService {
 
     public ScheduleDto.Response findOne(Long scheduleId) {
         Schedule findSchedule = get(scheduleId);
-
         return scheduleFactory.getSchedule(findSchedule);
 
     }

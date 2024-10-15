@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.todolistproject.dto.schedule.ScheduleDto;
 import org.example.todolistproject.entity.Role;
-import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
 
 import java.util.List;

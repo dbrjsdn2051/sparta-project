@@ -2,7 +2,6 @@ package org.example.todolistproject.dto.page;
 
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
