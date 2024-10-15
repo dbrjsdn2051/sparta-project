@@ -2,11 +2,9 @@ package org.example.todolistproject.config;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.example.todolistproject.dto.user.UserDto;
 import org.example.todolistproject.entity.Role;
 import org.example.todolistproject.entity.User;
 import org.example.todolistproject.repository.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

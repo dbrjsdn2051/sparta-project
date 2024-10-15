@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -17,8 +18,7 @@ public class WeatherClientService {
     private final WeatherClient weatherClient;
 
     public String getWeather(LocalDateTime today) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
-        String formatDate = simpleDateFormat.format(today);
+        String formatDate = today.format(DateTimeFormatter.ofPattern("MM-dd"));
 
         List<Weather> weatherList = weatherClient.getWeather();
 

@@ -1,5 +1,6 @@
 package org.example.todolistproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -27,6 +28,8 @@ public class User extends TimeStamped {
 
     @Email(message = "이메일 형식으로 입력해주세요.")
     private String email;
+
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)

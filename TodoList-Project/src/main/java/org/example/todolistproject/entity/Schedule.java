@@ -1,6 +1,7 @@
 package org.example.todolistproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,6 +23,7 @@ public class Schedule extends TimeStamped {
     private Long scheduleId;
 
     private String title;
+    @JsonIgnore
     private String password;
 
     private String content;

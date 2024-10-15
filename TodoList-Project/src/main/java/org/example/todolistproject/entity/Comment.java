@@ -1,6 +1,7 @@
 package org.example.todolistproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +15,7 @@ public class Comment extends TimeStamped {
     @Column(name = "comment_id")
     private Long commentId;
     private String username;
+    @JsonIgnore
     private String password;
 
     private String content;
