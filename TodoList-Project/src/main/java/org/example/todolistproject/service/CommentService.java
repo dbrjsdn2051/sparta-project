@@ -1,21 +1,14 @@
 package org.example.todolistproject.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.todolistproject.aop.SecurePasswordService;
-import org.example.todolistproject.aop.TableType;
-import org.example.todolistproject.aop.ValidPassword;
-import org.example.todolistproject.config.PasswordEncoder;
-import org.example.todolistproject.dto.comment.reponse.CommentInfoResponseDto;
-import org.example.todolistproject.dto.comment.request.CommentCreateRequestDto;
-import org.example.todolistproject.dto.comment.request.CommentDeleteAuthenticationRequestDto;
-import org.example.todolistproject.dto.comment.request.CommentUpdateAuthenticationRequestDto;
+import org.example.todolistproject.dto.comment.CommentDto;
 import org.example.todolistproject.entity.Comment;
 import org.example.todolistproject.entity.Schedule;
+import org.example.todolistproject.entity.User;
 import org.example.todolistproject.exception.NoResultDataException;
+import org.example.todolistproject.factory.CommentFactory;
 import org.example.todolistproject.repository.CommentRepository;
 import org.example.todolistproject.repository.ScheduleRepository;
-import org.example.todolistproject.security.JwtProvider;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,37 +18,35 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final ScheduleRepository scheduleRepository;
-    private final ModelMapper modelMapper;
-    private final JwtProvider jwtProvider;
+    private final CommentFactory commentFactory;
 
 
     @Transactional
-    @SecurePasswordService
-    public Long add(CommentCreateRequestDto dto, Long scheduleId, String tokenValue) {
-        String username = jwtProvider.getUsernameByToken(tokenValue);
-        dto.setUsername(username);
+    public Long add(CommentDto.Create dto, Long scheduleId, User user) {
+        dto.setUsername(user.getUsername());
 
-        Comment comment = modelMapper.map(dto, Comment.class);
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(NoResultDataException::new);
+
+        Comment comment = commentFactory.createComment(dto, schedule);
         comment.addSchedule(schedule);
 
         return commentRepository.save(comment).getCommentId();
     }
 
-    public CommentInfoResponseDto findOne(Long commentId) {
+    public CommentDto.Response findOne(Long commentId) {
         Comment findComment = get(commentId);
-        return modelMapper.map(findComment, CommentInfoResponseDto.class);
+        return commentFactory.getComment(findComment);
     }
 
     @Transactional
-    @ValidPassword(value = TableType.COMMENT)
-    public void update(CommentUpdateAuthenticationRequestDto dto){
+    public void update(CommentDto.Update dto) {
         Comment findComment = get(dto.getCommentId());
-        findComment.changeContent(dto.getContent());
+        commentFactory.updateComment(dto, findComment);
     }
 
-    @ValidPassword(value = TableType.COMMENT)
-    public void delete(CommentDeleteAuthenticationRequestDto dto){
+    public void delete(CommentDto.Delete dto) {
+        Comment comment = commentRepository.findById(dto.getCommentId()).orElseThrow(NoResultDataException::new);
+        commentFactory.deleteComment(dto, comment);
         commentRepository.deleteById(dto.getCommentId());
     }
 

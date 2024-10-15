@@ -3,12 +3,10 @@ package org.example.todolistproject.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.aop.CheckAuthority;
+import org.example.todolistproject.config.resolver.LoginUser;
 import org.example.todolistproject.dto.page.PageResponseDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleCreateRequestDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleDeleteAuthenticationRequestDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleUpdateAuthenticationRequestDto;
-import org.example.todolistproject.dto.schedule.response.ScheduleInfoResponseDto;
-import org.example.todolistproject.security.JwtProvider;
+import org.example.todolistproject.dto.schedule.ScheduleDto;
+import org.example.todolistproject.entity.User;
 import org.example.todolistproject.service.ScheduleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,32 +24,28 @@ public class ScheduleController {
 
     @PostMapping("/schedule")
     public ResponseEntity<Long> join(
-            @RequestBody @Valid ScheduleCreateRequestDto dto,
-            @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
-    {
-        Long scheduleId = scheduleService.add(dto, tokenValue);
+            @RequestBody @Valid ScheduleDto.Create dto,
+            @LoginUser User user) {
+        Long scheduleId = scheduleService.add(dto, user);
         return new ResponseEntity<>(scheduleId, HttpStatus.CREATED);
     }
 
     @GetMapping("/schedule/{scheduleId}")
-    public ResponseEntity<ScheduleInfoResponseDto> findSchedule(
-            @PathVariable Long scheduleId,
-            @CookieValue(JwtProvider.AUTHORIZATION_HEADER) String tokenValue)
-    {
-        ScheduleInfoResponseDto dto = scheduleService.findOne(scheduleId, tokenValue );
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<ScheduleDto.Response> findSchedule(@PathVariable Long scheduleId) {
+        ScheduleDto.Response findSchedule = scheduleService.findOne(scheduleId);
+        return ResponseEntity.ok(findSchedule);
     }
 
     @PatchMapping("/schedule")
     @CheckAuthority
-    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleUpdateAuthenticationRequestDto dto) {
+    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleDto.Update dto) {
         scheduleService.update(dto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/schedule")
     @CheckAuthority
-    public ResponseEntity<Void> deleteSchedule(@RequestBody ScheduleDeleteAuthenticationRequestDto dto) {
+    public ResponseEntity<Void> deleteSchedule(@RequestBody ScheduleDto.Delete dto) {
         scheduleService.delete(dto);
         return ResponseEntity.noContent().build();
     }

@@ -1,10 +1,8 @@
-package org.example.todolistproject.service;
+package org.example.todolistproject.client;
 
-import org.example.todolistproject.entity.Weather;
+import org.example.todolistproject.client.dto.Weather;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 

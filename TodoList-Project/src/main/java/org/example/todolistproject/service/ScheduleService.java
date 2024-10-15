@@ -1,21 +1,13 @@
 package org.example.todolistproject.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.todolistproject.aop.SecurePasswordService;
-import org.example.todolistproject.aop.TableType;
-import org.example.todolistproject.aop.ValidPassword;
-import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.page.PageResponseDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleCreateRequestDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleDeleteAuthenticationRequestDto;
-import org.example.todolistproject.dto.schedule.request.ScheduleUpdateAuthenticationRequestDto;
-import org.example.todolistproject.dto.schedule.response.ScheduleInfoResponseDto;
+import org.example.todolistproject.dto.schedule.ScheduleDto;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
 import org.example.todolistproject.exception.NoResultDataException;
+import org.example.todolistproject.factory.ScheduleFactory;
 import org.example.todolistproject.repository.ScheduleRepository;
-import org.example.todolistproject.security.JwtProvider;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,41 +18,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final JwtProvider jwtProvider;
-    private final ModelMapper modelMapper;
-    private final WeatherService weatherService;
+    private final ScheduleFactory scheduleFactory;
 
     @Transactional
-    @SecurePasswordService
-    public Long add(ScheduleCreateRequestDto scheduleDto, String tokenValue) {
-        scheduleDto.setWeather(weatherService.getWeather());
-
-        Schedule schedule = modelMapper.map(scheduleDto, Schedule.class);
-
-        User findUser = jwtProvider.getUserByToken(tokenValue);
-        schedule.addUser(findUser);
-
+    public Long add(ScheduleDto.Create scheduleDto, User user) {
+        Schedule schedule = scheduleFactory.createUser(scheduleDto, user);
+        schedule.addUser(user);
         return scheduleRepository.save(schedule).getScheduleId();
     }
 
-    public ScheduleInfoResponseDto findOne(Long scheduleId, String tokenValue) {
+    public ScheduleDto.Response findOne(Long scheduleId) {
         Schedule findSchedule = get(scheduleId);
-        ScheduleInfoResponseDto dto = modelMapper.map(findSchedule, ScheduleInfoResponseDto.class);
 
-        dto.setUsername(jwtProvider.getUsernameByToken(tokenValue));
+        return scheduleFactory.getSchedule(findSchedule);
 
-        return dto;
     }
 
     @Transactional
-    @ValidPassword(value = TableType.SCHEDULE)
-    public void update(ScheduleUpdateAuthenticationRequestDto dto) {
+    public void update(ScheduleDto.Update dto) {
         Schedule findSchedule = get(dto.getScheduleId());
-        findSchedule.changeContent(dto.getContent());
+        scheduleFactory.updateSchedule(dto, findSchedule);
     }
 
-    @ValidPassword(value = TableType.SCHEDULE)
-    public void delete(ScheduleDeleteAuthenticationRequestDto dto) {
+    public void delete(ScheduleDto.Delete dto) {
+        Schedule schedule = get(dto.getScheduleId());
+        scheduleFactory.deleteSchedule(dto, schedule);
         scheduleRepository.deleteById(dto.getScheduleId());
     }
 

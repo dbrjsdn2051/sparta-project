@@ -36,4 +36,16 @@ public class User extends TimeStamped {
     @JsonManagedReference
     private final List<Schedule> schedules = new ArrayList<>();
 
+    @Builder
+    public User(String username, String email, String password, Role role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public void change(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
 }

@@ -1,11 +1,12 @@
-package org.example.todolistproject.service;
+package org.example.todolistproject.client;
 
 import lombok.RequiredArgsConstructor;
-import org.example.todolistproject.entity.Weather;
+import org.example.todolistproject.client.dto.Weather;
 import org.example.todolistproject.exception.NoResultDataException;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -15,8 +16,7 @@ public class WeatherClientService {
 
     private final WeatherClient weatherClient;
 
-    public String getWeather() {
-        Date today = new Date();
+    public String getWeather(LocalDateTime today) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
         String formatDate = simpleDateFormat.format(today);
 

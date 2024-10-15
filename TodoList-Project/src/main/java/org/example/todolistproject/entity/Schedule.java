@@ -3,8 +3,10 @@ package org.example.todolistproject.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,5 +46,14 @@ public class Schedule extends TimeStamped {
 
     public void changeContent(String content){
         this.content = content;
+    }
+
+    @Builder
+    public Schedule(String title, String password, String content, String weather, User user) {
+        this.title = title;
+        this.password = password;
+        this.content = content;
+        this.weather = weather;
+        this.user = user;
     }
 }

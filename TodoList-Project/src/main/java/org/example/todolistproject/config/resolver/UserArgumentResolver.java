@@ -1,10 +1,9 @@
-package org.example.todolistproject.resolver;
+package org.example.todolistproject.config.resolver;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.example.todolistproject.aop.LoginUser;
 import org.example.todolistproject.entity.User;
 import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.exception.TokenNotFoundException;

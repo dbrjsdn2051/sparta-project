@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Order(1)
-public class JwtFilter implements Filter {
+public class JwtAuthenticationFilter implements Filter {
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
@@ -25,27 +25,30 @@ public class JwtFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String requestURI = request.getRequestURI();
-        if(StringUtils.hasText(requestURI) && (requestURI.startsWith("/api/login") || requestURI.startsWith("/api/user"))){
-            filterChain.doFilter(servletRequest, servletResponse);
-        } else{
-            String tokenFromRequest = jwtProvider.getTokenFromRequest(request);
-
-            if(StringUtils.hasText(tokenFromRequest)){
-                String token = jwtProvider.substringToken(tokenFromRequest);
-
-                if(!jwtProvider.validateToken(token)){
-                    throw new TokenExpiredException();
-                }
-
-                Claims info = jwtProvider.getUserInfoFromToken(token);
-
-                userRepository.findByUsername(info.getSubject())
-                        .orElseThrow(NoResultDataException::new);
-
+        if (StringUtils.hasText(requestURI)) {
+            if (requestURI.startsWith("/api/login") || requestURI.startsWith("/api/user")) {
                 filterChain.doFilter(servletRequest, servletResponse);
-            }else{
-                throw new TokenNotFoundException();
+                return;
             }
         }
+
+        String tokenFromRequest = jwtProvider.getTokenFromRequest(request);
+
+        if (!StringUtils.hasText(tokenFromRequest)) {
+            throw new TokenNotFoundException();
+        }
+
+        String token = jwtProvider.substringToken(tokenFromRequest);
+
+        if (!jwtProvider.validateToken(token)) {
+            throw new TokenExpiredException();
+        }
+
+        Claims info = jwtProvider.getUserInfoFromToken(token);
+
+        userRepository.findByUsername(info.getSubject())
+                .orElseThrow(NoResultDataException::new);
+
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 }

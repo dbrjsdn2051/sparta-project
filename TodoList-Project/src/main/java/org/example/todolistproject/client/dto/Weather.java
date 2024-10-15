@@ -1,4 +1,4 @@
-package org.example.todolistproject.entity;
+package org.example.todolistproject.client.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

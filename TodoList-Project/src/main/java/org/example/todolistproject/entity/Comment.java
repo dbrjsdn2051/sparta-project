@@ -33,4 +33,12 @@ public class Comment extends TimeStamped {
     public void changeContent(String content) {
         this.content = content;
     }
+
+    @Builder
+    public Comment(String username, String password, String content, Schedule schedule) {
+        this.username = username;
+        this.password = password;
+        this.content = content;
+        this.schedule = schedule;
+    }
 }
