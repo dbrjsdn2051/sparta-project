@@ -1,5 +1,6 @@
 package org.example.todolistproject.dto.comment;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ public class CommentDto {
     @Getter
     @Setter
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class Create {
         private String username;
         private String content;

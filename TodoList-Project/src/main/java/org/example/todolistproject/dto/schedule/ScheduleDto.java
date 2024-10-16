@@ -1,6 +1,7 @@
 package org.example.todolistproject.dto.schedule;
 
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class ScheduleDto {
     @Getter
     @Setter
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class Create {
         @Size(max = 10, message = "10글자 이내로 작성해주세요.")
         private String title;

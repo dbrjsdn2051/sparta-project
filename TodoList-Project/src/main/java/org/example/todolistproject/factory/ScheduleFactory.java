@@ -17,7 +17,7 @@ public class ScheduleFactory {
     private final PasswordEncoder passwordEncoder;
     private final WeatherClientService weatherClientService;
 
-    public Schedule createUser(ScheduleDto.Create scheduleDto, User user) {
+    public Schedule createSchedule(ScheduleDto.Create scheduleDto, User user) {
         String encodedPassword = passwordEncoder.encode(scheduleDto.getPassword());
         String weather = weatherClientService.getWeather(LocalDateTime.now());
 

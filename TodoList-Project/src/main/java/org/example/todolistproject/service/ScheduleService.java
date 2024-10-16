@@ -22,7 +22,7 @@ public class ScheduleService {
 
     @Transactional
     public Long add(ScheduleDto.Create scheduleDto, User user) {
-        Schedule schedule = scheduleFactory.createUser(scheduleDto, user);
+        Schedule schedule = scheduleFactory.createSchedule(scheduleDto, user);
         schedule.addUser(user);
         return scheduleRepository.save(schedule).getScheduleId();
     }
