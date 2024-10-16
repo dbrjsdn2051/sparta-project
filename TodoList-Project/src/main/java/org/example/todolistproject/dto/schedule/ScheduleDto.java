@@ -1,5 +1,6 @@
 package org.example.todolistproject.dto.schedule;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class ScheduleDto {
         private String title;
         private String content;
         private String password;
+        @JsonIgnore
         private String weather;
     }
 

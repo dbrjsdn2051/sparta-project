@@ -117,7 +117,6 @@ public class JwtProvider {
     public Role getRoles(String token) {
         Claims info = getUserInfoFromToken(token);
         String role = (String) info.get(AUTHORIZATION_KEY);
-        log.info("role = {}", role);
         return role.equals("USER") ? Role.USER : Role.ADMIN;
     }
 
