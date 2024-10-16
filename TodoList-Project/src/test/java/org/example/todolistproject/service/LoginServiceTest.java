@@ -1,6 +1,5 @@
 package org.example.todolistproject.service;
 
-import org.assertj.core.api.Assertions;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.login.LoginDto;
 import org.example.todolistproject.entity.Role;
@@ -17,8 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
