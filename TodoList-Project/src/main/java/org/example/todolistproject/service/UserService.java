@@ -7,6 +7,7 @@ import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.factory.UserFactory;
 import org.example.todolistproject.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class UserService {
         return userFactory.getUser(findUser);
     }
 
+    @Transactional
     public void update(UserDto.Update userDto) {
         User user = userRepository.findById(userDto.getUserId()).orElseThrow(NoResultDataException::new);
         userFactory.updateUser(userDto, user);

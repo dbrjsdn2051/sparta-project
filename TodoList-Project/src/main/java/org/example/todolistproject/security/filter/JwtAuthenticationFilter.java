@@ -11,11 +11,13 @@ import org.example.todolistproject.exception.TokenNotFoundException;
 import org.example.todolistproject.repository.UserRepository;
 import org.example.todolistproject.security.JwtProvider;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Component
 @Order(1)
 public class JwtAuthenticationFilter implements Filter {
 

@@ -56,7 +56,6 @@ class WeatherClientServiceTest {
     @Test
     void getWeatherFailTest() {
         // given
-        String formatDate = today.format(DateTimeFormatter.ofPattern("MM-dd"));
         WeatherResponseDto dto1 = new WeatherResponseDto("01-01", "Sunny");
         WeatherResponseDto dto2 = new WeatherResponseDto("02-02", "Rainy");
         List<WeatherResponseDto> weatherList = Arrays.asList(dto1, dto2);
