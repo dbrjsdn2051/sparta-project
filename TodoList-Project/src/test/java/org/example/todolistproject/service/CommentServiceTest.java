@@ -5,8 +5,6 @@ import org.example.todolistproject.entity.Comment;
 import org.example.todolistproject.entity.Role;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
-import org.example.todolistproject.exception.MissMatchPasswordException;
-import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.factory.CommentFactory;
 import org.example.todolistproject.repository.CommentRepository;
 import org.example.todolistproject.repository.ScheduleRepository;

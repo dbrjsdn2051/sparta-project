@@ -2,7 +2,6 @@ package org.example.todolistproject.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.todolistproject.aop.CheckAuthority;
 import org.example.todolistproject.config.resolver.LoginUser;
 import org.example.todolistproject.dto.page.PageResponseDto;
 import org.example.todolistproject.dto.schedule.ScheduleDto;
@@ -31,21 +30,19 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedule/{scheduleId}")
-    public ResponseEntity<ScheduleDto.Response> findSchedule(@PathVariable Long scheduleId) {
-        ScheduleDto.Response findSchedule = scheduleService.findOne(scheduleId);
+    public ResponseEntity<ScheduleDto.ResponseWithComment> findSchedule(@PathVariable Long scheduleId) {
+        ScheduleDto.ResponseWithComment findSchedule = scheduleService.findOne(scheduleId);
         return ResponseEntity.ok(findSchedule);
     }
 
     @PatchMapping("/schedule")
-    @CheckAuthority
-    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleDto.Update dto) {
+    public ResponseEntity<Void> updateSchedule(@RequestBody @Valid ScheduleDto.Update dto) {
         scheduleService.update(dto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/schedule")
-    @CheckAuthority
-    public ResponseEntity<Void> deleteSchedule(@RequestBody ScheduleDto.Delete dto) {
+    public ResponseEntity<Void> deleteSchedule(@RequestBody @Valid ScheduleDto.Delete dto) {
         scheduleService.delete(dto);
         return ResponseEntity.noContent().build();
     }

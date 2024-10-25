@@ -1,9 +1,10 @@
 package org.example.todolistproject.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -12,25 +13,20 @@ public class Comment extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
     private Long commentId;
+
+    @Column(nullable = false)
     private String username;
-    @JsonIgnore
+
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id")
-    @JsonBackReference
     private Schedule schedule;
 
-    public void addSchedule(Schedule schedule) {
-        if(!schedule.getComments().contains(this)){
-            schedule.getComments().add(this);
-        }
-        this.schedule = schedule;
-    }
 
     public void changeContent(String content) {
         this.content = content;

@@ -29,17 +29,4 @@ public class ScheduleFactory {
                 .user(user)
                 .build();
     }
-
-    public void updateSchedule(ScheduleDto.Update scheduleDto, Schedule schedule) {
-        passwordEncoder.validPassword(scheduleDto.getPassword(), schedule.getPassword());
-        schedule.changeContent(scheduleDto.getContent());
-    }
-
-    public void deleteSchedule(ScheduleDto.Delete scheduleDto, Schedule schedule) {
-        passwordEncoder.validPassword(scheduleDto.getPassword(), schedule.getPassword());
-    }
-
-    public ScheduleDto.Response getSchedule(Schedule schedule) {
-        return new ScheduleDto.Response(schedule);
-    }
 }

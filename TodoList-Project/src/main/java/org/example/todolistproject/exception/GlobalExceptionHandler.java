@@ -3,6 +3,7 @@ package org.example.todolistproject.exception;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -15,39 +16,12 @@ import java.util.Set;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<String> authorizationHandler(AuthorizationException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
 
-    @ExceptionHandler(NoResultDataException.class)
-    public ResponseEntity<String> getExceptionHandler(NoResultDataException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(MissMatchPasswordException.class)
-    public ResponseEntity<String> passwordHandler(MissMatchPasswordException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(TokenNotFoundException.class)
-    public ResponseEntity<String> tokenInfoHandler(TokenNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<String> expiredHandler(TokenExpiredException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
-//    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> validHandler(ConstraintViolationException ex) {
-        Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
-        String e = "";
-        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
-            e = constraintViolation.getMessage();
-        }
-        return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ApiError> apiException(CustomException ex){
+        return ResponseEntity.status(
+                HttpStatusCode.valueOf(ex.getErrorCode().getStatus()))
+                .body(new ApiError(ex.getErrorCode().getMessage(), ex.getErrorCode().getStatus()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

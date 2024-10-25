@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.login.LoginDto;
 import org.example.todolistproject.entity.User;
-import org.example.todolistproject.exception.MissMatchPasswordException;
-import org.example.todolistproject.exception.NoResultDataException;
+import org.example.todolistproject.exception.CustomException;
+import org.example.todolistproject.exception.ErrorCode;
 import org.example.todolistproject.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +18,10 @@ public class LoginService {
 
     public User loadUserByEmail(LoginDto dto) {
         User findUser = userRepository.findByEmail(dto.getEmail())
-                .orElseThrow(NoResultDataException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(dto.getPassword(), findUser.getPassword())) {
-            throw new MissMatchPasswordException();
+            throw new CustomException(ErrorCode.MISS_MATCHER_PASSWORD);
         }
 
         return findUser;

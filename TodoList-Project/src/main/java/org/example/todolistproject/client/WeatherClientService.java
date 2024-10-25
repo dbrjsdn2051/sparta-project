@@ -2,7 +2,8 @@ package org.example.todolistproject.client;
 
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.client.dto.WeatherResponseDto;
-import org.example.todolistproject.exception.NoResultDataException;
+import org.example.todolistproject.exception.CustomException;
+import org.example.todolistproject.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,6 @@ public class WeatherClientService {
         List<WeatherResponseDto> weatherResponseDtoList = weatherClient.getWeather();
 
         return weatherResponseDtoList.stream().filter(weatherResponseDto -> weatherResponseDto.getDate().equals(formatDate))
-                .map(WeatherResponseDto::getWeather).findFirst().orElseThrow(NoResultDataException::new);
+                .map(WeatherResponseDto::getWeather).findFirst().orElseThrow(() -> new CustomException(ErrorCode.WEATHER_NOT_FOUND));
     }
 }

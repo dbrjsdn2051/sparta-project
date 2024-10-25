@@ -1,7 +1,6 @@
 package org.example.todolistproject.client;
 
 import org.example.todolistproject.client.dto.WeatherResponseDto;
-import org.example.todolistproject.exception.NoResultDataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,7 +62,7 @@ class WeatherClientServiceTest {
         when(weatherClient.getWeather()).thenReturn(weatherList);
 
         //when & then
-        assertThrows(NoResultDataException.class, () -> weatherClientService.getWeather(today));
+        assertThrows(RuntimeException.class, () -> weatherClientService.getWeather(today));
 
         verify(weatherClient, times(1)).getWeather();
     }
@@ -74,7 +73,7 @@ class WeatherClientServiceTest {
         when(weatherClient.getWeather()).thenReturn(Collections.emptyList());
 
         // when & then
-        assertThrows(NoResultDataException.class, () -> weatherClientService.getWeather(today));
+        assertThrows(RuntimeException.class, () -> weatherClientService.getWeather(today));
 
         verify(weatherClient, times(1)).getWeather();
     }

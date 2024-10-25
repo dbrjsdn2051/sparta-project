@@ -24,15 +24,6 @@ public class CommentFactory {
                 .build();
     }
 
-    public void updateComment(CommentDto.Update commentDto, Comment comment) {
-        passwordEncoder.validPassword(commentDto.getPassword(), comment.getPassword());
-        comment.changeContent(commentDto.getContent());
-    }
-
-    public void deleteComment(CommentDto.Delete commentDto, Comment comment) {
-        passwordEncoder.validPassword(commentDto.getPassword(), comment.getPassword());
-    }
-
     public CommentDto.Response getComment(Comment comment) {
         return new CommentDto.Response(comment);
     }

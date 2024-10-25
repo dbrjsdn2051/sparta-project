@@ -1,7 +1,8 @@
 package org.example.todolistproject.config;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import org.example.todolistproject.exception.MissMatchPasswordException;
+import org.example.todolistproject.exception.CustomException;
+import org.example.todolistproject.exception.ErrorCode;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +19,7 @@ public class PasswordEncoder {
 
     public void validPassword(String password, String encodedPassword) {
         if (!matches(password, encodedPassword)) {
-            throw new MissMatchPasswordException();
+            throw new CustomException(ErrorCode.MISS_MATCHER_PASSWORD);
         }
     }
 }

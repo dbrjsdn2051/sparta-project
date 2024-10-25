@@ -4,10 +4,8 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
-import org.example.todolistproject.exception.NoResultDataException;
-import org.example.todolistproject.exception.TokenExpiredException;
-import org.example.todolistproject.exception.TokenNotFoundException;
+import org.example.todolistproject.exception.CustomException;
+import org.example.todolistproject.exception.ErrorCode;
 import org.example.todolistproject.repository.UserRepository;
 import org.example.todolistproject.security.JwtProvider;
 import org.springframework.core.annotation.Order;
@@ -30,7 +28,7 @@ public class JwtAuthenticationFilter implements Filter {
         String requestURI = request.getRequestURI();
 
         if (!StringUtils.hasText(requestURI)) {
-            throw new BadRequestException();
+            throw new CustomException(ErrorCode.TOKEN_MISSING);
         }
 
         if (requestURI.startsWith("/api/login") || requestURI.startsWith("/api/user")) {
@@ -41,19 +39,19 @@ public class JwtAuthenticationFilter implements Filter {
         String tokenFromRequest = jwtProvider.getTokenFromRequest(request);
 
         if (!StringUtils.hasText(tokenFromRequest)) {
-            throw new TokenNotFoundException();
+            throw new CustomException(ErrorCode.TOKEN_MISSING);
         }
 
         String token = jwtProvider.substringToken(tokenFromRequest);
 
         if (!jwtProvider.validateToken(token)) {
-            throw new TokenExpiredException();
+            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
         }
 
         Claims info = jwtProvider.getUserInfoFromToken(token);
 
         userRepository.findByUsername(info.getSubject())
-                .orElseThrow(NoResultDataException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         filterChain.doFilter(servletRequest, servletResponse);
     }

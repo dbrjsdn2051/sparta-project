@@ -1,11 +1,10 @@
 package org.example.todolistproject.service;
 
+import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.schedule.ScheduleDto;
 import org.example.todolistproject.entity.Role;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
-import org.example.todolistproject.exception.MissMatchPasswordException;
-import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.factory.ScheduleFactory;
 import org.example.todolistproject.repository.ScheduleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +28,8 @@ class ScheduleServiceTest {
 
     @Mock
     ScheduleFactory scheduleFactory;
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @InjectMocks
     ScheduleService scheduleService;
@@ -43,7 +44,7 @@ class ScheduleServiceTest {
 
     @BeforeEach
     void init() {
-        createDto = new ScheduleDto.Create("title1", "content", "1234", "sunny");
+        createDto = new ScheduleDto.Create("title1", "content", "1234");
         updateDto = new ScheduleDto.Update();
         updateDto.setScheduleId(1L);
         updateDto.setPassword("1234");
@@ -89,14 +90,13 @@ class ScheduleServiceTest {
     void updateScheduleSuccessTest() {
         // given
         when(scheduleRepository.findById(1L)).thenReturn(Optional.ofNullable(schedule));
-        doNothing().when(scheduleFactory).updateSchedule(updateDto, schedule);
+        when(passwordEncoder.matches(any(), any())).thenReturn(true);
 
         // when
         scheduleService.update(updateDto);
 
         // then
         verify(scheduleRepository, times(1)).findById(1L);
-        verify(scheduleFactory, times(1)).updateSchedule(updateDto, schedule);
     }
 
     @Test
@@ -105,7 +105,7 @@ class ScheduleServiceTest {
         when(scheduleRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(NoResultDataException.class, () -> scheduleService.update(updateDto));
+        assertThrows(RuntimeException.class, () -> scheduleService.update(updateDto));
         verify(scheduleRepository, times(1)).findById(1L);
     }
 
@@ -113,12 +113,12 @@ class ScheduleServiceTest {
     void updateScheduleFail_MissMatchPassword() {
         // given
         when(scheduleRepository.findById(1L)).thenReturn(Optional.ofNullable(schedule));
-        doThrow(MissMatchPasswordException.class)
+        doThrow(RuntimeException.class)
                 .when(scheduleFactory)
                 .updateSchedule(updateDto, schedule);
 
         // when & then
-        assertThrows(MissMatchPasswordException.class, () -> scheduleService.update(updateDto));
+        assertThrows(RuntimeException.class, () -> scheduleService.update(updateDto));
         verify(scheduleRepository, times(1)).findById(1L);
         verify(scheduleFactory).updateSchedule(any(), any());
     }
@@ -164,16 +164,16 @@ class ScheduleServiceTest {
     void findOnetest() {
         // given
         when(scheduleRepository.findById(1L)).thenReturn(Optional.ofNullable(schedule));
-        when(scheduleFactory.getSchedule(schedule)).thenReturn(new ScheduleDto.Response(schedule));
+        when(scheduleFactory.getSchedule(schedule)).thenReturn(new ScheduleDto.ResponseWithComment(schedule));
 
         // when
-        ScheduleDto.Response response = scheduleService.findOne(1L);
+        ScheduleDto.ResponseWithComment responseWithComment = scheduleService.findOne(1L);
 
         // then
-        assertThat(response.getScheduleId()).isEqualTo(schedule.getScheduleId());
-        assertThat(response.getUsername()).isEqualTo(schedule.getUser().getUsername());
-        assertThat(response.getWeather()).isEqualTo(schedule.getWeather());
-        assertThat(response.getTitle()).isEqualTo(schedule.getTitle());
+        assertThat(responseWithComment.getScheduleId()).isEqualTo(schedule.getScheduleId());
+        assertThat(responseWithComment.getUsername()).isEqualTo(schedule.getUser().getUsername());
+        assertThat(responseWithComment.getWeather()).isEqualTo(schedule.getWeather());
+        assertThat(responseWithComment.getTitle()).isEqualTo(schedule.getTitle());
 
         verify(scheduleRepository, times(1)).findById(1L);
         verify(scheduleFactory, times(1)).getSchedule(any());

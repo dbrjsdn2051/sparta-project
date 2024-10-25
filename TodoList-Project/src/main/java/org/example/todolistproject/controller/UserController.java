@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<Long> join(@RequestBody UserDto.Create dto) {
+    public ResponseEntity<Long> join(@RequestBody @Valid UserDto.Create dto) {
         Long userId = userService.add(dto);
         return new ResponseEntity<>(userId, HttpStatus.CREATED);
     }
@@ -35,7 +35,7 @@ public class UserController {
 
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteUser(@RequestBody UserDto.Delete dto) {
+    public ResponseEntity<Void> deleteUser(@RequestBody @Valid UserDto.Delete dto) {
         userService.delete(dto);
         return ResponseEntity.noContent().build();
     }

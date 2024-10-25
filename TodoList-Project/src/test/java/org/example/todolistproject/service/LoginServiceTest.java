@@ -4,8 +4,6 @@ import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.login.LoginDto;
 import org.example.todolistproject.entity.Role;
 import org.example.todolistproject.entity.User;
-import org.example.todolistproject.exception.MissMatchPasswordException;
-import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,7 +76,7 @@ class LoginServiceTest {
         when(passwordEncoder.matches(invalidPassword.getPassword(), user.getPassword())).thenReturn(false);
 
         // when & then
-        assertThrows(MissMatchPasswordException.class, () -> loginService.loadUserByEmail(invalidPassword));
+        assertThrows(RuntimeException.class, () -> loginService.loadUserByEmail(invalidPassword));
 
         verify(passwordEncoder, times(1)).matches(any(), any());
     }
@@ -89,7 +87,7 @@ class LoginServiceTest {
         when(userRepository.findByEmail(nonUserLoginDto.getEmail())).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(NoResultDataException.class, () -> loginService.loadUserByEmail(nonUserLoginDto));
+        assertThrows(RuntimeException.class, () -> loginService.loadUserByEmail(nonUserLoginDto));
         verify(userRepository, times(1)).findByEmail(any());
     }
 

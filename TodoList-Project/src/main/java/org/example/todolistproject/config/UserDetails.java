@@ -22,7 +22,7 @@ public class UserDetails {
     public void createAdmin() {
         if (!ddlAuto.equals("create")) return;
 
-        String encode = passwordEncoder.encode("1234");
+        String encode = passwordEncoder.encode("password1!");
         User admin = User.builder().username("admin").email("admin@naver.com").role(Role.ADMIN).password(encode).build();
         userRepository.save(admin);
     }

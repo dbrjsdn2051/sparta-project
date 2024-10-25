@@ -1,26 +1,15 @@
 package org.example.todolistproject.factory;
 
-import org.example.todolistproject.aop.CheckAuthority;
 import org.example.todolistproject.config.PasswordEncoder;
 import org.example.todolistproject.dto.user.UserDto;
 import org.example.todolistproject.entity.Role;
 import org.example.todolistproject.entity.User;
-import org.example.todolistproject.exception.MissMatchPasswordException;
-import org.example.todolistproject.exception.NoResultDataException;
-import org.example.todolistproject.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;

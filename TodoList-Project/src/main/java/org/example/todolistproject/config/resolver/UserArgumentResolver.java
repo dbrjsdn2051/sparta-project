@@ -5,8 +5,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.todolistproject.entity.User;
-import org.example.todolistproject.exception.NoResultDataException;
-import org.example.todolistproject.exception.TokenNotFoundException;
+import org.example.todolistproject.exception.CustomException;
+import org.example.todolistproject.exception.ErrorCode;
 import org.example.todolistproject.repository.UserRepository;
 import org.example.todolistproject.security.JwtProvider;
 import org.springframework.core.MethodParameter;
@@ -31,27 +31,10 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-
-        String tokenValue = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if(cookie.getName().equals(JwtProvider.AUTHORIZATION_HEADER)){
-                tokenValue = cookie.getValue();
-                break;
-            }
-        }
-
-        if(tokenValue == null){
-            throw new TokenNotFoundException();
-        }
-
-        tokenValue = tokenValue.replace("%20", " ");
-        String token = jwtProvider.substringToken(tokenValue);
-        Claims info = jwtProvider.getUserInfoFromToken(token);
-        String username = info.getSubject();
-
-        return userRepository.findByUsername(username).orElseThrow(NoResultDataException::new);
+        String username = jwtProvider.getClaimInfoFromCookie(cookies);
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 }

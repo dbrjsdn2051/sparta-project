@@ -6,7 +6,6 @@ import org.example.todolistproject.dto.schedule.ScheduleDto;
 import org.example.todolistproject.entity.Role;
 import org.example.todolistproject.entity.Schedule;
 import org.example.todolistproject.entity.User;
-import org.example.todolistproject.exception.MissMatchPasswordException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

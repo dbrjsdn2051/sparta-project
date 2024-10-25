@@ -3,8 +3,6 @@ package org.example.todolistproject.service;
 import org.example.todolistproject.dto.user.UserDto;
 import org.example.todolistproject.entity.Role;
 import org.example.todolistproject.entity.User;
-import org.example.todolistproject.exception.MissMatchPasswordException;
-import org.example.todolistproject.exception.NoResultDataException;
 import org.example.todolistproject.factory.UserFactory;
 import org.example.todolistproject.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

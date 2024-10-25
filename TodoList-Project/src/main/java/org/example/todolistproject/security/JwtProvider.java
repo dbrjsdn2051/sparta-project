@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.todolistproject.entity.Role;
+import org.example.todolistproject.exception.CustomException;
+import org.example.todolistproject.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -65,7 +67,7 @@ public class JwtProvider {
             cookie.setPath("/");
             response.addCookie(cookie);
         } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage());
+            log.info(e.getMessage());
         }
     }
 
@@ -73,8 +75,8 @@ public class JwtProvider {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        log.error("Not Found Token");
-        throw new NullPointerException("Not Found Token");
+        log.info("Not Found Token");
+        throw new CustomException(ErrorCode.TOKEN_MISSING);
     }
 
     public boolean validateToken(String token) {
@@ -82,13 +84,14 @@ public class JwtProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명입니다. ");
+            log.info("Invalid JWT signature, 유효하지 않는 JWT 서명입니다. ");
         } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token, 만료된 JWT token 입니다.");
+            log.info("Expired JWT token, 만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰입니다.");
+            log.info("Unsupported JWT token, 지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims is empty, 잘못된 JWT 토큰입니다. ");
+            log.info("JWT claims is empty, 잘못된 JWT 토큰입니다. ");
+            log.info("JWT claims is empty, 잘못된 JWT 토큰입니다. ");
         }
         return false;
     }
@@ -118,6 +121,23 @@ public class JwtProvider {
         Claims info = getUserInfoFromToken(token);
         String role = (String) info.get(AUTHORIZATION_KEY);
         return role.equals("USER") ? Role.USER : Role.ADMIN;
+    }
+
+    public String getTokenValueFromCookie(Cookie[] cookies) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(JwtProvider.AUTHORIZATION_HEADER)) {
+                String cookieValue = cookie.getValue();
+                return cookieValue.replace("%20", " ");
+            }
+        }
+        throw new CustomException(ErrorCode.TOKEN_MISSING);
+    }
+
+    public String getClaimInfoFromCookie(Cookie[] cookies) {
+        String tokenValue = getTokenValueFromCookie(cookies);
+        String token = substringToken(tokenValue);
+        Claims info = getUserInfoFromToken(token);
+        return info.getSubject();
     }
 
 }
