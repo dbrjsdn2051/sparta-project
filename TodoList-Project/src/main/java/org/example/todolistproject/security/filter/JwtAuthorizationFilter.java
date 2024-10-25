@@ -32,7 +32,7 @@ public class JwtAuthorizationFilter implements Filter {
             return;
         }
 
-        if (!requestURI.equals("/api/post")) {
+        if (!requestURI.equals("/api/schedule")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }

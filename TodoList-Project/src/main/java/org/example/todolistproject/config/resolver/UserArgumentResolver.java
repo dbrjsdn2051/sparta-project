@@ -33,8 +33,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         Cookie[] cookies = request.getCookies();
-        String username = jwtProvider.getClaimInfoFromCookie(cookies);
-        return userRepository.findByUsername(username)
+        Claims info = jwtProvider.getClaimInfoFromCookie(cookies);
+        return userRepository.findByUsername(info.getSubject())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 }

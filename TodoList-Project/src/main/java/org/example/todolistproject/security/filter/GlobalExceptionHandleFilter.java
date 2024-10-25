@@ -21,6 +21,7 @@ public class GlobalExceptionHandleFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (CustomException e) {
             response.setStatus(e.getErrorCode().getStatus());
+            response.setContentType("application/json; charset=UTF-8");
             response.getWriter().write(e.getMessage());
         }
     }

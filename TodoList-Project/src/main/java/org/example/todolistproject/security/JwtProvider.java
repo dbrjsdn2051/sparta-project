@@ -133,11 +133,10 @@ public class JwtProvider {
         throw new CustomException(ErrorCode.TOKEN_MISSING);
     }
 
-    public String getClaimInfoFromCookie(Cookie[] cookies) {
+    public Claims getClaimInfoFromCookie(Cookie[] cookies) {
         String tokenValue = getTokenValueFromCookie(cookies);
         String token = substringToken(tokenValue);
-        Claims info = getUserInfoFromToken(token);
-        return info.getSubject();
+        return getUserInfoFromToken(token);
     }
 
 }
