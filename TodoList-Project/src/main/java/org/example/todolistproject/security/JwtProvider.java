@@ -102,15 +102,12 @@ public class JwtProvider {
 
     public String getTokenFromRequest(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
-                    try {
-                        return URLDecoder.decode(cookie.getValue(), "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        return null;
-                    }
-
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
+                try {
+                    return URLDecoder.decode(cookie.getValue(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    return null;
                 }
             }
         }
